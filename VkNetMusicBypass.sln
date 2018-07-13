@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VkNetMusicBypass", "VkNetMusicBypass\VkNetMusicBypass.csproj", "{3FEB88CB-CECE-4CFB-99F1-BF4D5520A06A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FEB88CB-CECE-4CFB-99F1-BF4D5520A06A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FEB88CB-CECE-4CFB-99F1-BF4D5520A06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FEB88CB-CECE-4CFB-99F1-BF4D5520A06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FEB88CB-CECE-4CFB-99F1-BF4D5520A06A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7D75C14-F9C2-4C98-8FE9-DBDB56E32D53}
+	EndGlobalSection
+EndGlobal
