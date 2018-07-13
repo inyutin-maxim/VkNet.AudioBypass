@@ -19,7 +19,7 @@ namespace VkNetMusicBypass
             var serviceCollection = new ServiceCollection();
             serviceCollection.TryAddSingleton<IRestClient, RestClient>();
             api = new VkApi(serviceCollection);
-            auth = new Authorize(api);
+            auth = new Authorize(api, new ReceiptParser());
 
             string token = File.ReadAllText("token.txt");
 
@@ -54,7 +54,6 @@ namespace VkNetMusicBypass
                 return api.Audio.Get(out user, new VkNet.Model.RequestParams.AudioGetParams()
                 {
                     Count = 40,
-                    OwnerId = 62103461
                 });
             }
             catch (VkNet.Exception.VkApiException)

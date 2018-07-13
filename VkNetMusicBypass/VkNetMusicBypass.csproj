@@ -73,8 +73,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authorize.cs" />
+    <Compile Include="IReceiptParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiptParser.cs" />
     <Compile Include="RestClient.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,17 +3,23 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using VkNet.Model;
 using VkNet.Utils;
-using System;
 
 namespace VkNetMusicBypass
 {
     class Authorize
     {
         public VkApi api;
+        private IReceiptParser receipt;
 
-        public Authorize(VkApi _api)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_api"></param>
+        /// <param name="_receipt">Реализация парсера receipt'а</param>
+        public Authorize(VkApi _api, IReceiptParser _receipt)
         {
             api = _api;
+            receipt = _receipt;
         }
 
         public void Auth(string token)
@@ -81,14 +87,9 @@ namespace VkNetMusicBypass
                 }
             });
 
-
-            string[] receipt = new string[] { "zEXKaMARS_h:APA91bHXsKM-p7TA1cQ_dkKsDD3dk6pTlvS7egJvkfzNXpNsYIpyYZeHIiMfCgHeEKOaQ-RRJcma7vrDZF7gCWnqtkXA9TRjewqg8iXOJCdxoVuPHi-23qkGjDg0ygGfl6k_APr1Vb9COTPi9KDvMVDG4a9MUZ_waQ",
-                    "7AJXiv9OMFx:APA91bF6eR6NGn3SSIkL152A610JzdjC616tBb0TBoyENXOVAQDeLb1JdZEn4RTvkV3Hoxn0VATuO4U1fTHOJCfpieAvFDVM_GjFgkkLAZev2bPdyA9rqDkjUK5AzboRP-nXoJ6t1FMRkyNIWYNnB66xFrLPInq1KA",
-                    "zIA9dkystyi:APA91bGLOkfX_Maad2q_MgLV6BmSHXdeQ99K5GbGnvVZ7BLLYXdapQahJXCb1AEOafFAoMf6GY-ql0UedVK6EZd6dIUcIn8ALgqW-KMNzs1yKGOe-Jakxe8Tfr7bCkFbY6UDA5RCph4KqqIilZDEEFZ8w8PPzWAAQA" };
-
             var response = api.Call("auth.refreshToken", new VkParameters()
                 {
-                    { "receipt", receipt[new Random().Next(receipt.Length)] }
+                    { "receipt", receipt.GetReceipt() }
                 });
 
             return JObject.Parse(response.RawJson)["response"]["token"].ToString();
