@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NLog;
-using VkNet.Utils;
 using VkNet.Abstractions.Utils;
+using VkNet.Utils;
 
-namespace VkNetMusicBypass
+namespace VkNet.AudioBypassService
 {
     /// <inheritdoc />
     [UsedImplicitly]
-    public class RestClient : IRestClient
+    public class RestClientEx : IRestClient
     {
         /// <summary>
         /// The log
@@ -24,7 +24,7 @@ namespace VkNetMusicBypass
         private TimeSpan _timeoutSeconds;
 
         /// <inheritdoc />
-        public RestClient(ILogger logger, IWebProxy proxy)
+        public RestClientEx(ILogger logger, IWebProxy proxy)
         {
             _logger = logger;
             Proxy = proxy;
@@ -90,24 +90,16 @@ namespace VkNetMusicBypass
                 {
                     client.Timeout = Timeout;
                 }
-
-                //User-Agent для обхода закрытия методов audio
                 client.DefaultRequestHeaders.Add("User-Agent", "VKAndroidApp/5.0.1-1237 (Android 7.1.1; SDK 25; armeabi-v7a; Razer p90; en)");
-
                 var response = await method(arg: client).ConfigureAwait(false);
                 var requestUri = response.RequestMessage.RequestUri.ToString();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    _logger?.Debug(message: $"Response:{Environment.NewLine}{Utilities.PreetyPrintJson(json: json)}");
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                _logger?.Debug(message: $"Response:{Environment.NewLine}{Utilities.PreetyPrintJson(json: content)}");
 
-                    return HttpResponse<string>.Success(httpStatusCode: response.StatusCode, value: json, requestUri: requestUri);
-                }
-
-                var message = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                return HttpResponse<string>.Fail(httpStatusCode: response.StatusCode, message: message, requestUri: requestUri);
+                return response.IsSuccessStatusCode ?
+                    HttpResponse<string>.Success(httpStatusCode: response.StatusCode, value: content, requestUri: requestUri) :
+                    HttpResponse<string>.Fail(httpStatusCode: response.StatusCode, message: content, requestUri: requestUri);
             }
         }
     }
