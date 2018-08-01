@@ -12,7 +12,9 @@ namespace ConsoleApp
 {
     class Program
     {
+        /* НЕ ЗАБУДЬТЕ ДОБАВИТЬ ССЫЛКУ НА СЕРВИС */
         private static IVkApi _api;
+        
         static void Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
@@ -23,8 +25,8 @@ namespace ConsoleApp
 
             _api.Authorize(new ApiAuthParams
             {
-                Login = "89655341526",
-                Password = "AludaG13"
+                Login = "ЛОГИН",
+                Password = "ПАРОЛЬ"
             });
 
             var audios = _api.Audio.Get(out var user, new AudioGetParams { Count = 10 });
