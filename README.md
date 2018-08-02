@@ -1,2 +1,2 @@
-# VkNetMusicBypass
-Обход закрытия методов audio для VkNet
+# VkNet.AudioBypass
+Обход закрытия методов audio для VkNet.
