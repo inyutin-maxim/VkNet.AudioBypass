@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using NLog;
 using VkNet.Abstractions;
 using VkNet.Abstractions.Utils;
 using VkNet.Enums.SafetyEnums;
@@ -17,40 +16,35 @@ namespace VkNet.AudioBypassService
     public class Authorization : IBrowser
     {
         #region Private Fields
+
         private IApiAuthParams _apiAuthParams;
         private readonly IVkApiVersionManager _versionManager;
         private readonly IRestClient _restClient;
-        private readonly ILogger _logger;
+        private readonly ILogger<Authorization> _logger;
         private readonly IReceiptParser _parser;
+
         #endregion
 
         public IWebProxy Proxy { get; set; }
+
         public AuthorizationResult Authorize()
         {
-            var authResponse = BaseAuth();
+            var authResult = BaseAuth();
 
-            var authObject = JsonConvert.DeserializeObject<AuthorizationResult>(authResponse, 
-                new JsonSerializerSettings
-                {
-                    ContractResolver = new DefaultContractResolver
-                    {
-                        NamingStrategy = new SnakeCaseNamingStrategy()
-                    }
-                });
-
-            var newToken = RefreshToken(authObject.AccessToken, _parser.GetReceipt());
+            var newToken = RefreshToken(authResult.AccessToken, _parser.GetReceipt());
 
             var authresult = new AuthorizationResult
             {
                 AccessToken = newToken,
-                ExpiresIn = authObject.ExpiresIn,
-                UserId = authObject.UserId
+                ExpiresIn = authResult.ExpiresIn,
+                UserId = authResult.UserId
             };
 
             return authresult;
         }
 
-        public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser, [CanBeNull]ILogger logger)
+        public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser,
+            ILogger<Authorization> logger)
         {
             _versionManager = versionManager;
             _restClient = restClient;
@@ -63,24 +57,24 @@ namespace VkNet.AudioBypassService
             _apiAuthParams = authParams;
         }
 
-        private string BaseAuth()
+        private AuthorizationResult BaseAuth()
         {
-            _logger?.Debug("1. Авторизация с помощью логина и пароля.");
+            _logger?.LogDebug("1. Авторизация с помощью логина и пароля.");
 
-            return Invoke("https://oauth.vk.com/token",
+            return Invoke<AuthorizationResult>("https://oauth.vk.com/token",
                 new VkParameters
                 {
-                    { "grant_type", "password" },
-                    { "client_id", "2274003" },
-                    { "client_secret", "hHbZxrka2uZ6jB1inYsH" },
-                    { "username", $"{_apiAuthParams.Login}" },
-                    { "password", $"{_apiAuthParams.Password}" }
+                    {"grant_type", "password"},
+                    {"client_id", "2274003"},
+                    {"client_secret", "hHbZxrka2uZ6jB1inYsH"},
+                    {"username", $"{_apiAuthParams.Login}"},
+                    {"password", $"{_apiAuthParams.Password}"}
                 });
         }
 
         private string RefreshToken(string oldToken, string receipt)
         {
-            _logger?.Debug("2. Обновление токена.");
+            _logger?.LogDebug("2. Обновление токена.");
 
             var response = Invoke("https://api.vk.com/method/auth.refreshToken",
                 new VkParameters
@@ -92,7 +86,20 @@ namespace VkNet.AudioBypassService
 
             var json = JObject.Parse(response);
 
-            return json["response"]["token"].ToString();
+            return json["response"]["token"].Value<string>();
+        }
+
+        private T Invoke<T>(string url, VkParameters parameters)
+        {
+            var response = Invoke(url, parameters);
+
+            return JsonConvert.DeserializeObject<T>(response, new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new SnakeCaseNamingStrategy()
+                }
+            });
         }
 
         private string Invoke(string url, VkParameters parameters)
@@ -104,11 +111,11 @@ namespace VkNet.AudioBypassService
 
             var answer = response.Value ?? response.Message;
 
-            VkErrors.IfErrorThrowException(answer);
             return answer;
         }
 
-        #region NotImplemented
+        #region Not Implemented
+
         public Uri CreateAuthorizeUrl(ulong clientId, ulong scope, Display display, string state)
         {
             throw new NotImplementedException();
@@ -123,6 +130,12 @@ namespace VkNet.AudioBypassService
         {
             throw new NotImplementedException();
         }
+
+        public AuthorizationResult Validate(string validateUrl)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
