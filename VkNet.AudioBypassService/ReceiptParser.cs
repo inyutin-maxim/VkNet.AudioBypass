@@ -25,9 +25,9 @@ namespace VkNet.AudioBypassService
 
             var json = JObject.Parse(answer.Value);
 
-            var receipts = json["rec"].ToObject<IEnumerable<string>>();
+            var receipts = json["rec"].ToObject<IList<string>>();
 
-            return receipts.ElementAt(new Random().Next(receipts.Count()));
+            return receipts.ElementAt(new Random().Next(receipts.Count));
         }
     }
 }
