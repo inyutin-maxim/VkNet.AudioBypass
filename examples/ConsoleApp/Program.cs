@@ -12,9 +12,8 @@ namespace ConsoleApp
 {
     class Program
     {
-        /* НЕ ЗАБУДЬТЕ ДОБАВИТЬ ССЫЛКУ НА СЕРВИС */
         private static IVkApi _api;
-        
+
         static void Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
@@ -29,7 +28,7 @@ namespace ConsoleApp
                 Password = "ПАРОЛЬ"
             });
 
-            var audios = _api.Audio.Get(out var user, new AudioGetParams { Count = 10 });
+            var audios = _api.Audio.Get(new AudioGetParams {Count = 10});
             foreach (var audio in audios)
             {
                 Console.WriteLine($" > {audio.Artist} - {audio.Title}");
