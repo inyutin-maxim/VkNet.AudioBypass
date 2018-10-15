@@ -118,7 +118,10 @@ namespace VkNet.AudioBypassService
                 });
 
             var jObject = JObject.Parse(response);
-            var vkResponse = new VkResponse(jObject) {RawJson = response};
+            
+            var rawResponse = jObject["response"];
+            
+            var vkResponse = new VkResponse(rawResponse) {RawJson = response};
 
             return vkResponse["token"];
         }
