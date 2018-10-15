@@ -8,6 +8,7 @@ using Newtonsoft.Json.Serialization;
 using VkNet.Abstractions;
 using VkNet.Abstractions.Utils;
 using VkNet.Enums.SafetyEnums;
+using VkNet.Exception;
 using VkNet.Model;
 using VkNet.Utils;
 
@@ -18,9 +19,13 @@ namespace VkNet.AudioBypassService
         #region Private Fields
 
         private IApiAuthParams _apiAuthParams;
+
         private readonly IVkApiVersionManager _versionManager;
+
         private readonly IRestClient _restClient;
+
         private readonly ILogger<Authorization> _logger;
+
         private readonly IReceiptParser _parser;
 
         #endregion
@@ -33,14 +38,12 @@ namespace VkNet.AudioBypassService
 
             var newToken = RefreshToken(authResult.AccessToken, _parser.GetReceipt());
 
-            var authresult = new AuthorizationResult
+            return new AuthorizationResult
             {
                 AccessToken = newToken,
                 ExpiresIn = authResult.ExpiresIn,
                 UserId = authResult.UserId
             };
-
-            return authresult;
         }
 
         public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser,
@@ -57,19 +60,49 @@ namespace VkNet.AudioBypassService
             _apiAuthParams = authParams;
         }
 
-        private AuthorizationResult BaseAuth()
+        private AuthorizationResult BaseAuth(string code = null)
         {
-            _logger?.LogDebug("1. Авторизация с помощью логина и пароля.");
+            if (string.IsNullOrEmpty(code))
+                _logger?.LogDebug("1. Авторизация.");
 
-            return Invoke<AuthorizationResult>("https://oauth.vk.com/token",
+            var response = Invoke("https://oauth.vk.com/token",
                 new VkParameters
                 {
                     {"grant_type", "password"},
                     {"client_id", "2274003"},
                     {"client_secret", "hHbZxrka2uZ6jB1inYsH"},
+                    {"2fa_supported", true},
                     {"username", $"{_apiAuthParams.Login}"},
-                    {"password", $"{_apiAuthParams.Password}"}
+                    {"password", $"{_apiAuthParams.Password}"},
+                    {"code", code}
                 });
+
+            var json = JObject.Parse(response);
+
+            var error = json["error"];
+
+            if (error == null)
+                return json.ToObject<AuthorizationResult>(DefaultJsonSerializer);
+
+            var errorDescription = json["error_description"].ToString();
+
+            switch (error.ToString())
+            {
+                case "need_validation":
+                    _logger?.LogDebug("1.1 Требуется код двухфакторной аутентификаци.");
+
+                    var result = _apiAuthParams.TwoFactorAuthorization.BeginInvoke(null, null);
+                    result.AsyncWaitHandle.WaitOne();
+                    var authCode = _apiAuthParams.TwoFactorAuthorization.EndInvoke(result);
+
+                    return BaseAuth(authCode);
+                case "invalid_request":
+                case "invalid_client":
+                    throw new VkApiAuthorizationException(errorDescription, _apiAuthParams.Login,
+                        _apiAuthParams.Password);
+                default:
+                    throw new VkApiException($"Неизвестная ошибка.{Environment.NewLine}{response}");
+            }
         }
 
         private string RefreshToken(string oldToken, string receipt)
@@ -84,27 +117,23 @@ namespace VkNet.AudioBypassService
                     {"v", _versionManager.Version}
                 });
 
-            var json = JObject.Parse(response);
+            var jObject = JObject.Parse(response);
+            var vkResponse = new VkResponse(jObject) {RawJson = response};
 
-            return json["response"]["token"].Value<string>();
+            return vkResponse["token"];
         }
 
-        private T Invoke<T>(string url, VkParameters parameters)
+        private JsonSerializer DefaultJsonSerializer => new JsonSerializer
         {
-            var response = Invoke(url, parameters);
-
-            return JsonConvert.DeserializeObject<T>(response, new JsonSerializerSettings
+            ContractResolver = new DefaultContractResolver
             {
-                ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                }
-            });
-        }
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            }
+        };
 
         private string Invoke(string url, VkParameters parameters)
         {
-            var response = _restClient.GetAsync(new Uri(url), parameters)
+            var response = _restClient.PostAsync(new Uri(url), parameters)
                 .ConfigureAwait(false)
                 .GetAwaiter()
                 .GetResult();
