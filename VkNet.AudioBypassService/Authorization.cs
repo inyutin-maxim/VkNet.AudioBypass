@@ -75,6 +75,9 @@ namespace VkNet.AudioBypassService
                 case "need_validation":
                     _logger?.LogDebug("1.1 Требуется код двухфакторной аутентификаци.");
 
+                    if (_apiAuthParams.TwoFactorAuthorization == null)
+                        throw new ArgumentNullException(nameof(_apiAuthParams.TwoFactorAuthorization));
+
                     var result = _apiAuthParams.TwoFactorAuthorization.BeginInvoke(null, null);
                     result.AsyncWaitHandle.WaitOne();
                     var authCode = _apiAuthParams.TwoFactorAuthorization.EndInvoke(result);
