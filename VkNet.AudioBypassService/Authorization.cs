@@ -16,19 +16,14 @@ namespace VkNet.AudioBypassService
 {
     public class Authorization : IBrowser
     {
-        #region Private Fields
-
-        private IApiAuthParams _apiAuthParams;
-
-        private readonly IVkApiVersionManager _versionManager;
-
-        private readonly IRestClient _restClient;
-
-        private readonly ILogger<Authorization> _logger;
-
-        private readonly IReceiptParser _parser;
-
-        #endregion
+        public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser,
+            ILogger<Authorization> logger)
+        {
+            _versionManager = versionManager;
+            _restClient = restClient;
+            _parser = parser;
+            _logger = logger;
+        }
 
         public IWebProxy Proxy { get; set; }
 
@@ -44,15 +39,6 @@ namespace VkNet.AudioBypassService
                 ExpiresIn = authResult.ExpiresIn,
                 UserId = authResult.UserId
             };
-        }
-
-        public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser,
-            ILogger<Authorization> logger)
-        {
-            _versionManager = versionManager;
-            _restClient = restClient;
-            _parser = parser;
-            _logger = logger;
         }
 
         public void SetAuthParams(IApiAuthParams authParams)
@@ -84,8 +70,6 @@ namespace VkNet.AudioBypassService
             if (error == null)
                 return json.ToObject<AuthorizationResult>(DefaultJsonSerializer);
 
-            var errorDescription = json["error_description"].ToString();
-
             switch (error.ToString())
             {
                 case "need_validation":
@@ -98,8 +82,13 @@ namespace VkNet.AudioBypassService
                     return BaseAuth(authCode);
                 case "invalid_request":
                 case "invalid_client":
+                    var errorDescription = json["error_description"].ToString();
                     throw new VkApiAuthorizationException(errorDescription, _apiAuthParams.Login,
                         _apiAuthParams.Password);
+                case "need_captcha":
+                    var sid = json["captcha_sid"].Value<long>();
+                    var imgUrl = json["captcha_img"].ToString();
+                    throw new CaptchaNeededException(sid, imgUrl);
                 default:
                     throw new VkApiException($"Неизвестная ошибка.{Environment.NewLine}{response}");
             }
@@ -118,21 +107,11 @@ namespace VkNet.AudioBypassService
                 });
 
             var jObject = JObject.Parse(response);
-            
+
             var rawResponse = jObject["response"];
-            
-            var vkResponse = new VkResponse(rawResponse) {RawJson = response};
 
-            return vkResponse["token"];
+            return rawResponse["token"].ToString();
         }
-
-        private JsonSerializer DefaultJsonSerializer => new JsonSerializer
-        {
-            ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new SnakeCaseNamingStrategy()
-            }
-        };
 
         private string Invoke(string url, VkParameters parameters)
         {
@@ -145,6 +124,28 @@ namespace VkNet.AudioBypassService
 
             return answer;
         }
+
+        #region Private Fields
+
+        private IApiAuthParams _apiAuthParams;
+
+        private readonly IVkApiVersionManager _versionManager;
+
+        private readonly IRestClient _restClient;
+
+        private readonly ILogger<Authorization> _logger;
+
+        private readonly IReceiptParser _parser;
+
+        private JsonSerializer DefaultJsonSerializer => new JsonSerializer
+        {
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            }
+        };
+
+        #endregion
 
         #region Not Implemented
 
