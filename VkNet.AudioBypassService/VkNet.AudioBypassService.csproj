@@ -1,19 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40;net45</TargetFrameworks>
-      <Version>1.0.2</Version>
+      <Version>1.1.0</Version>
       <Description>
           Расширение для VkNet для обхода ограничения к методам Audios ВКонтакте API.
       </Description>
       <PackageReleaseNotes>
-          Поддержка двухфакторной аутентификаци.
+          Обработка капчи на этапе авторизации.
+          Добавлен extension метод для регистрации в ServiceCollection.
       </PackageReleaseNotes>
       <Authors>atckun;itsokto</Authors>
       <RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
       <PackageTags>vknet;vk;api;audio;bypass</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" PrivateAssets="all" />
     <PackageReference Include="VkNet" Version="1.38.0" />
   </ItemGroup>
 </Project>
