@@ -41,10 +41,11 @@ namespace VkNet.AudioBypassService
         }
 
         /// <inheritdoc />
-        public Task<HttpResponse<string>> GetAsync(Uri uri, VkParameters parameters)
+        public Task<HttpResponse<string>> GetAsync(Uri uri, IEnumerable<KeyValuePair<string, string>> parameters)
         {
-            var queries = parameters.Where(k => !string.IsNullOrWhiteSpace(k.Value))
-                .Select(kvp => $"{kvp.Key.ToLowerInvariant()}={kvp.Value}");
+            var queries = parameters
+                .Where(parameter => !string.IsNullOrWhiteSpace(parameter.Value))
+                .Select(parameter => $"{parameter.Key.ToLowerInvariant()}={parameter.Value}");
 
             var url = new UriBuilder(uri)
             {
@@ -53,54 +54,54 @@ namespace VkNet.AudioBypassService
 
             _logger?.LogDebug($"GET request: {url.Uri}");
 
-            return Call(httpClient => httpClient.GetAsync(url.Uri));
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            return Call(httpClient => httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead));
         }
 
         /// <inheritdoc />
         public Task<HttpResponse<string>> PostAsync(Uri uri, IEnumerable<KeyValuePair<string, string>> parameters)
         {
-            var json = JsonConvert.SerializeObject(parameters);
-            _logger?.LogDebug($"POST request: {uri}{Environment.NewLine}{Utilities.PreetyPrintJson(json)}");
-            HttpContent content = new FormUrlEncodedContent(parameters);
+            if (_logger != null)
+            {
+                var json = JsonConvert.SerializeObject(parameters);
+                _logger.LogDebug($"POST request: {uri}{Environment.NewLine}{Utilities.PreetyPrintJson(json)}");
+            }
 
-            return Call(httpClient => httpClient.PostAsync(uri, content));
+            var content = new FormUrlEncodedContent(parameters);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, uri) {Content = content};
+
+            return Call(httpClient => httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead));
         }
 
         private async Task<HttpResponse<string>> Call(Func<HttpClient, Task<HttpResponseMessage>> method)
         {
+            var useProxyCondition = Proxy != null;
+
+            if (useProxyCondition)
+                _logger?.LogDebug($"Use Proxy: {Proxy}");
+
             var handler = new HttpClientHandler
             {
-                UseProxy = false
+                Proxy = Proxy,
+                UseProxy = useProxyCondition
             };
 
-            if (Proxy != null)
+            using (var client = new HttpClient(handler) {Timeout = Timeout})
             {
-                handler = new HttpClientHandler
-                {
-                    Proxy = Proxy,
-                    UseProxy = true
-                };
-
-                _logger?.LogDebug($"Use Proxy: {Proxy}");
-            }
-
-            using (var client = new HttpClient(handler))
-            {
-                if (Timeout != TimeSpan.Zero)
-                {
-                    client.Timeout = Timeout;
-                }
-                
-                client.DefaultRequestHeaders.Add("User-Agent", "VKAndroidApp/5.0.1-1237 (Android 7.1.1; SDK 25; armeabi-v7a; Razer p90; en)");
+                client.DefaultRequestHeaders.Add("User-Agent",
+                    "VKAndroidApp/5.0.1-1237 (Android 7.1.1; SDK 25; armeabi-v7a; Razer p90; en)");
                 var response = await method(client).ConfigureAwait(false);
-                var requestUri = response.RequestMessage.RequestUri.ToString();
 
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
                 _logger?.LogDebug($"Response:{Environment.NewLine}{Utilities.PreetyPrintJson(content)}");
-                
-                return response.IsSuccessStatusCode 
-                    ? HttpResponse<string>.Success(response.StatusCode, content, requestUri) 
-                    : HttpResponse<string>.Fail(response.StatusCode, content, requestUri);
+                var url = response.RequestMessage.RequestUri.ToString();
+
+                return response.IsSuccessStatusCode
+                    ? HttpResponse<string>.Success(response.StatusCode, content, url)
+                    : HttpResponse<string>.Fail(response.StatusCode, content, url);
             }
         }
     }
