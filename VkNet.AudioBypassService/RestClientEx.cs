@@ -54,9 +54,7 @@ namespace VkNet.AudioBypassService
 
             _logger?.LogDebug($"GET request: {url.Uri}");
 
-            var request = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            return Call(httpClient => httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead));
+            return Call(httpClient => httpClient.GetAsync(url.Uri));
         }
 
         /// <inheritdoc />
@@ -70,9 +68,7 @@ namespace VkNet.AudioBypassService
 
             var content = new FormUrlEncodedContent(parameters);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, uri) {Content = content};
-
-            return Call(httpClient => httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead));
+            return Call(httpClient => httpClient.PostAsync(uri, content));
         }
 
         private async Task<HttpResponse<string>> Call(Func<HttpClient, Task<HttpResponseMessage>> method)
