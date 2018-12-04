@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40;net45</TargetFrameworks>
-      <Version>1.1.1</Version>
+      <Version>1.1.2</Version>
       <Description>
           Расширение для VkNet для обхода ограничения к методам Audios ВКонтакте API.
       </Description>
       <PackageReleaseNotes>
-          Обновление до VkNet 1.40.0, исправление ошибок.
+          Исправление ошибок.
       </PackageReleaseNotes>
       <Authors>atckun;itsokto</Authors>
       <RepositoryType>GIT</RepositoryType>
