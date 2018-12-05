@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,7 +18,7 @@ namespace VkNet.AudioBypassService
     public class Authorization : IBrowser
     {
         public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser,
-            ILogger<Authorization> logger)
+            [CanBeNull] ILogger<Authorization> logger)
         {
             _versionManager = versionManager;
             _restClient = restClient;
@@ -31,7 +32,12 @@ namespace VkNet.AudioBypassService
         {
             var authResult = BaseAuth();
 
-            var newToken = RefreshToken(authResult.AccessToken, _parser.GetReceipt());
+            var receipt = _parser.GetReceipt();
+
+            if (receipt == null)
+                throw new VkApiException("receipt is null");
+
+            var newToken = RefreshToken(authResult.AccessToken, receipt);
 
             return new AuthorizationResult
             {
@@ -97,6 +103,18 @@ namespace VkNet.AudioBypassService
             }
         }
 
+        private string Invoke(string url, VkParameters parameters)
+        {
+            var response = _restClient.PostAsync(new Uri(url), parameters)
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
+
+            var answer = response.Value ?? response.Message;
+
+            return answer;
+        }
+
         private string RefreshToken(string oldToken, string receipt)
         {
             _logger?.LogDebug("2. Обновление токена.");
@@ -114,18 +132,6 @@ namespace VkNet.AudioBypassService
             var rawResponse = jObject["response"];
 
             return rawResponse["token"].ToString();
-        }
-
-        private string Invoke(string url, VkParameters parameters)
-        {
-            var response = _restClient.PostAsync(new Uri(url), parameters)
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-
-            var answer = response.Value ?? response.Message;
-
-            return answer;
         }
 
         #region Private Fields
