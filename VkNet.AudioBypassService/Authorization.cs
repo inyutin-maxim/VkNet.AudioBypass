@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using VkNet.Abstractions;
+using VkNet.Abstractions.Core;
 using VkNet.Abstractions.Utils;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Exception;
