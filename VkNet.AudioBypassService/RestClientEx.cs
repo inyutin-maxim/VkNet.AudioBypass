@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using VkNet.Abstractions.Utils;
 using VkNet.Utils;
 
@@ -60,12 +59,12 @@ namespace VkNet.AudioBypassService
         /// <inheritdoc />
         public Task<HttpResponse<string>> PostAsync(Uri uri, IEnumerable<KeyValuePair<string, string>> parameters)
         {
-            if (_logger != null)
-            {
-                var json = JsonConvert.SerializeObject(parameters);
+            //if (_logger != null)
+            //{
+                //var json = JsonConvert.SerializeObject(parameters);
                 // No such method in the new version
                 // _logger.LogDebug($"POST request: {uri}{Environment.NewLine}{Utilities.PreetyPrintJson(json)}");
-            }
+            //}
 
             var content = new FormUrlEncodedContent(parameters);
 
