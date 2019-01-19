@@ -61,12 +61,14 @@ namespace VkNet.AudioBypassService
                 new VkParameters
                 {
                     {"grant_type", "password"},
-                    {"client_id", "2274003"},
-                    {"client_secret", "hHbZxrka2uZ6jB1inYsH"},
+                    {"client_id", "2685278"},
+                    {"client_secret", "lxhD8OD7dMsqtXIm5IUY"},
                     {"2fa_supported", true},
                     {"username", $"{_apiAuthParams.Login}"},
                     {"password", $"{_apiAuthParams.Password}"},
-                    {"code", code}
+                    {"code", code},
+                    {"scope", $"{_apiAuthParams.Settings}"},
+                    {"v", "5.72"}
                 });
 
             var json = JObject.Parse(response);
@@ -119,13 +121,16 @@ namespace VkNet.AudioBypassService
         {
             _logger?.LogDebug("2. Обновление токена.");
 
-            var response = Invoke("https://api.vk.com/method/auth.refreshToken",
-                new VkParameters
-                {
-                    {"receipt", receipt},
-                    {"access_token", oldToken},
-                    {"v", _versionManager.Version}
-                });
+            var httpResponse = _restClient.GetAsync(new Uri("https://api.vk.com/method/auth.refreshToken"),
+                    new List<KeyValuePair<string, string>> {
+                        new KeyValuePair<string, string>("receipt", receipt),
+                        new KeyValuePair<string, string>("access_token", oldToken),
+                        new KeyValuePair<string, string>("v", "5.72")
+                    })
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
+            var response = httpResponse.Value ?? httpResponse.Message;
 
             var jObject = JObject.Parse(response);
 
