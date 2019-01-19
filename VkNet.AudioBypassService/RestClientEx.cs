@@ -87,7 +87,7 @@ namespace VkNet.AudioBypassService
             using (var client = new HttpClient(handler) {Timeout = Timeout})
             {
                 client.DefaultRequestHeaders.Add("User-Agent",
-                    "VKAndroidApp/5.0.1-1237 (Android 7.1.1; SDK 25; armeabi-v7a; Razer p90; en)");
+                    "KateMobileAndroid/51.2 lite-443 (Android 4.4.2; SDK 19; x86; unknown Android SDK built for x86; en)");
                 var response = await method(client).ConfigureAwait(false);
 
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
