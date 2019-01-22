@@ -12,6 +12,7 @@ namespace ConsoleApp
     {
         private static IVkApi _api;
 
+        // ReSharper disable once UnusedParameter.Local
         private static void Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
@@ -19,16 +20,24 @@ namespace ConsoleApp
 
             _api = new VkApi(serviceCollection);
 
+            Console.WriteLine(" > Номер телефона/E-mail:");
+            var login = Console.ReadLine();
+
+            Console.WriteLine(" > Пароль:");
+            var password = Console.ReadLine();
+
             _api.Authorize(new ApiAuthParams
             {
-                Login = "ЛОГИН",
-                Password = "ПАРОЛЬ",
+                Login = login,
+                Password = password,
                 TwoFactorAuthorization = () =>
                 {
-                    Console.WriteLine(" > Введите код:");
+                    Console.WriteLine(" > Код двухфакторной аутентификации:");
                     return Console.ReadLine();
                 }
             });
+
+            Console.WriteLine($" > Access Token: {_api.Token}");
 
             var audios = _api.Audio.Get(new AudioGetParams {Count = 10});
             foreach (var audio in audios) Console.WriteLine($" > {audio.Artist} - {audio.Title}");
