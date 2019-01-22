@@ -8,7 +8,7 @@
         <PackageReleaseNotes>
             Исправление ошибок.
         </PackageReleaseNotes>
-        <Authors>atckun;itsokto</Authors>
+        <Authors>hikiblade;itsokto</Authors>
         <RepositoryType>GIT</RepositoryType>
         <RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
         <PackageTags>vknet;vk;api;audio;bypass</PackageTags>
