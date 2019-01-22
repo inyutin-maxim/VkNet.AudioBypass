@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using VkNet.Abstractions.Core;
 using VkNet.Abstractions.Utils;
+using VkNet.AudioBypassService.Abstractions;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Exception;
 using VkNet.Model;
@@ -15,10 +16,12 @@ using VkNet.Utils;
 
 namespace VkNet.AudioBypassService
 {
-    public class Authorization : IBrowser
+    [UsedImplicitly]
+    public class KateMobileAuthorization : IBrowser
     {
-        public Authorization(IVkApiVersionManager versionManager, IRestClient restClient, IReceiptParser parser,
-            [CanBeNull] ILogger<Authorization> logger)
+        public KateMobileAuthorization([NotNull] IVkApiVersionManager versionManager, [NotNull] IRestClient restClient,
+            [NotNull] IReceiptParser parser,
+            [CanBeNull] ILogger<KateMobileAuthorization> logger)
         {
             _versionManager = versionManager;
             _restClient = restClient;
@@ -52,12 +55,24 @@ namespace VkNet.AudioBypassService
             _apiAuthParams = authParams;
         }
 
+        public string GetJson(string url, IEnumerable<KeyValuePair<string, string>> parameters)
+        {
+            var response = _restClient.PostAsync(new Uri(url), parameters)
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
+
+            var answer = response.Value ?? response.Message;
+
+            return answer;
+        }
+
         private AuthorizationResult BaseAuth(string code = null)
         {
             if (string.IsNullOrEmpty(code))
                 _logger?.LogDebug("1. Авторизация.");
 
-            var response = Invoke("https://oauth.vk.com/token",
+            var response = GetJson("https://oauth.vk.com/token",
                 new VkParameters
                 {
                     {"grant_type", "password"},
@@ -68,7 +83,7 @@ namespace VkNet.AudioBypassService
                     {"password", $"{_apiAuthParams.Password}"},
                     {"code", code},
                     {"scope", $"{_apiAuthParams.Settings}"},
-                    {"v", "5.72"}
+                    {"v", _versionManager.Version}
                 });
 
             var json = JObject.Parse(response);
@@ -105,32 +120,17 @@ namespace VkNet.AudioBypassService
             }
         }
 
-        private string Invoke(string url, VkParameters parameters)
-        {
-            var response = _restClient.PostAsync(new Uri(url), parameters)
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-
-            var answer = response.Value ?? response.Message;
-
-            return answer;
-        }
-
         private string RefreshToken(string oldToken, string receipt)
         {
             _logger?.LogDebug("2. Обновление токена.");
 
-            var httpResponse = _restClient.GetAsync(new Uri("https://api.vk.com/method/auth.refreshToken"),
-                    new List<KeyValuePair<string, string>> {
-                        new KeyValuePair<string, string>("receipt", receipt),
-                        new KeyValuePair<string, string>("access_token", oldToken),
-                        new KeyValuePair<string, string>("v", "5.72")
-                    })
-                .ConfigureAwait(false)
-                .GetAwaiter()
-                .GetResult();
-            var response = httpResponse.Value ?? httpResponse.Message;
+            var response = GetJson("https://api.vk.com/method/auth.refreshToken",
+                new VkParameters
+                {
+                    {"receipt", receipt},
+                    {"access_token", oldToken},
+                    {"v", _versionManager.Version}
+                });
 
             var jObject = JObject.Parse(response);
 
@@ -147,7 +147,7 @@ namespace VkNet.AudioBypassService
 
         private readonly IRestClient _restClient;
 
-        private readonly ILogger<Authorization> _logger;
+        private readonly ILogger<KateMobileAuthorization> _logger;
 
         private readonly IReceiptParser _parser;
 
@@ -169,11 +169,6 @@ namespace VkNet.AudioBypassService
         }
 
         public AuthorizationResult Validate(string validateUrl, string phoneNumber)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetJson(string url, IEnumerable<KeyValuePair<string, string>> parameters)
         {
             throw new NotImplementedException();
         }

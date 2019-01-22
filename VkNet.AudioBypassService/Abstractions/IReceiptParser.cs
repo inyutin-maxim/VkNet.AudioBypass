@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace VkNet.AudioBypassService
+namespace VkNet.AudioBypassService.Abstractions
 {
     public interface IReceiptParser
     {

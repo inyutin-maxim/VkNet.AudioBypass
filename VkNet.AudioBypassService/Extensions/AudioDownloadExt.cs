@@ -9,7 +9,7 @@ namespace VkNet.AudioBypassService.Extensions
 {
     public static class AudioDownloadExt
     {
-        private static WebClient _webClient = new WebClient();
+        private static readonly WebClient _webClient = new WebClient();
 
         public static void Download(this IAudioCategory audioCategory, Audio audio, string downloadPath)
         {

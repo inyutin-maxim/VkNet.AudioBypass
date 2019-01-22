@@ -3,6 +3,8 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using VkNet.Abstractions.Utils;
+using VkNet.AudioBypassService.Abstractions;
+using VkNet.AudioBypassService.Utils;
 using VkNet.Utils;
 
 namespace VkNet.AudioBypassService.Extensions
@@ -13,8 +15,9 @@ namespace VkNet.AudioBypassService.Extensions
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.TryAddSingleton<IBrowser, Authorization>();
-            services.TryAddSingleton<IRestClient, RestClientEx>();
+            services.TryAddSingleton<FakeSafetyNetClient>();
+            services.TryAddSingleton<IBrowser, KateMobileAuthorization>();
+            services.TryAddSingleton<IRestClient, RestClientWithUserAgent>();
             services.TryAddSingleton<IReceiptParser, ReceiptParser>();
 
             return services;
