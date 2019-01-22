@@ -14,7 +14,7 @@ using VkNet.Exception;
 using VkNet.Model;
 using VkNet.Utils;
 
-namespace VkNet.AudioBypassService
+namespace VkNet.AudioBypassService.Utils
 {
     [UsedImplicitly]
     public class KateMobileAuthorization : IBrowser
