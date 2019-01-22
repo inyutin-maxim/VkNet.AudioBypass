@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40;net45</TargetFrameworks>
-      <Version>1.1.3</Version>
-      <Description>
-          Расширение для VkNet для обхода ограничения к методам Audios ВКонтакте API.
-      </Description>
-      <PackageReleaseNotes>
-          Исправление ошибок.
-      </PackageReleaseNotes>
-      <Authors>atckun;itsokto</Authors>
-      <RepositoryType>GIT</RepositoryType>
-      <RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
-      <PackageTags>vknet;vk;api;audio;bypass</PackageTags>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" PrivateAssets="all" />
-    <PackageReference Include="VkNet" Version="1.41.0" />
-    <PackageReference Include="protobuf-net" Version="2.4.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net40;net45</TargetFrameworks>
+        <Version>1.2.0</Version>
+        <Description>
+            Расширение для VkNet для обхода ограничения к методам Audios ВКонтакте API.
+        </Description>
+        <PackageReleaseNotes>
+            Исправление ошибок.
+        </PackageReleaseNotes>
+        <Authors>atckun;itsokto</Authors>
+        <RepositoryType>GIT</RepositoryType>
+        <RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
+        <PackageTags>vknet;vk;api;audio;bypass</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" PrivateAssets="all"/>
+        <PackageReference Include="VkNet" Version="1.41.0"/>
+        <PackageReference Include="protobuf-net" Version="2.4.0"/>
+    </ItemGroup>
 </Project>
