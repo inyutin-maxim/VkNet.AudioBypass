@@ -12,12 +12,12 @@ using VkNet.Utils;
 
 namespace VkNet.AudioBypassService.Utils
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="IRestClient" />
     [UsedImplicitly]
-    public class RestClientWithUserAgent : IRestClient
+    public class RestClientWithUserAgent : IRestClient, IDisposable
     {
         private const string DefaultUserAgent =
-            "KateMobileAndroid/51.2 lite-443 (Android 4.4.2; SDK 19; x86; unknown Android SDK built for x86; en)";
+            "VKAndroidApp/5.2.6-3146 (Android 13.3.7; SDK 228; armeabi-v7a; AudioBypass; en)";
 
         private readonly HttpClient _httpClient;
 
@@ -37,11 +37,7 @@ namespace VkNet.AudioBypassService.Utils
             _httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
         }
 
-        public IWebProxy Proxy
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+        public IWebProxy Proxy { get; set; }
 
         /// <inheritdoc />
         public TimeSpan Timeout
@@ -97,6 +93,25 @@ namespace VkNet.AudioBypassService.Utils
             return response.IsSuccessStatusCode
                 ? HttpResponse<string>.Success(response.StatusCode, content, url)
                 : HttpResponse<string>.Fail(response.StatusCode, content, url);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _httpClient?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~RestClientWithUserAgent()
+        {
+            Dispose(true);
         }
     }
 }

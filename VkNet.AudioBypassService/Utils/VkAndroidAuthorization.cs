@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using JetBrains.Annotations;
@@ -16,12 +16,13 @@ using VkNet.Utils;
 
 namespace VkNet.AudioBypassService.Utils
 {
+    /// <inheritdoc />
     [UsedImplicitly]
-    public class KateMobileAuthorization : IBrowser
+    public class VkAndroidAuthorization : IBrowser
     {
-        public KateMobileAuthorization([NotNull] IVkApiVersionManager versionManager, [NotNull] IRestClient restClient,
+        public VkAndroidAuthorization([NotNull] IVkApiVersionManager versionManager, [NotNull] IRestClient restClient,
             [NotNull] IReceiptParser parser,
-            [CanBeNull] ILogger<KateMobileAuthorization> logger)
+            [CanBeNull] ILogger<VkAndroidAuthorization> logger)
         {
             _versionManager = versionManager;
             _restClient = restClient;
@@ -76,8 +77,8 @@ namespace VkNet.AudioBypassService.Utils
                 new VkParameters
                 {
                     {"grant_type", "password"},
-                    {"client_id", "2685278"},
-                    {"client_secret", "lxhD8OD7dMsqtXIm5IUY"},
+                    {"client_id", "2274003"},
+                    {"client_secret", "hHbZxrka2uZ6jB1inYsH"},
                     {"2fa_supported", true},
                     {"username", $"{_apiAuthParams.Login}"},
                     {"password", $"{_apiAuthParams.Password}"},
@@ -147,7 +148,7 @@ namespace VkNet.AudioBypassService.Utils
 
         private readonly IRestClient _restClient;
 
-        private readonly ILogger<KateMobileAuthorization> _logger;
+        private readonly ILogger<VkAndroidAuthorization> _logger;
 
         private readonly IReceiptParser _parser;
 
