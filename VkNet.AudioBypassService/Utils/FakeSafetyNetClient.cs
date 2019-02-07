@@ -57,7 +57,6 @@ namespace VkNet.AudioBypassService.Utils
             var requestStream = new MemoryStream();
             Serializer.Serialize(requestStream, androidRequest);
 
-            request.Headers.Add("Expect", "");
             request.Content = new ByteArrayContent(requestStream.ToArray());
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-protobuffer");
 
