@@ -14,7 +14,7 @@ namespace VkNet.AudioBypassService.Utils
 {
     /// <inheritdoc cref="IRestClient" />
     [UsedImplicitly]
-    public class RestClientWithUserAgent : IRestClient, IDisposable
+    public class RestClientWithUserAgent : IRestClient
     {
         private const string DefaultUserAgent =
             "VKAndroidApp/5.2.6-3146 (Android 13.3.7; SDK 228; armeabi-v7a; AudioBypass; en)";
@@ -111,7 +111,7 @@ namespace VkNet.AudioBypassService.Utils
 
         ~RestClientWithUserAgent()
         {
-            Dispose(true);
+            Dispose(false);
         }
     }
 }
