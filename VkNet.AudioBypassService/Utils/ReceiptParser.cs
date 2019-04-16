@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Threading.Tasks;
+using JetBrains.Annotations;
 using VkNet.AudioBypassService.Abstractions;
 
 namespace VkNet.AudioBypassService.Utils
@@ -13,12 +14,12 @@ namespace VkNet.AudioBypassService.Utils
             _safetyNetClient = safetyNetClient;
         }
 
-        public string GetReceipt()
+        public async Task<string> GetReceipt()
         {
-            var response = _safetyNetClient.CheckIn().Result;
-            var receipt = _safetyNetClient.GetReceipt(response).Result;
+            var response = await _safetyNetClient.CheckIn().ConfigureAwait(false);
+            var receipt = await _safetyNetClient.GetReceipt(response).ConfigureAwait(false);
 
-            return receipt.Remove(0, 7);
+            return receipt?.Remove(0, 7);
         }
     }
 }

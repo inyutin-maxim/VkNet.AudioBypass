@@ -1,10 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System.Threading.Tasks;
 
 namespace VkNet.AudioBypassService.Abstractions
 {
     public interface IReceiptParser
     {
-        [CanBeNull]
-        string GetReceipt();
+        Task<string> GetReceipt();
     }
 }
