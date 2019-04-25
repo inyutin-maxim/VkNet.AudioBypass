@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Flurl.Http;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -16,53 +17,46 @@ namespace VkNet.AudioBypassService.Utils
     [UsedImplicitly]
     public class RestClientWithUserAgent : IRestClient
     {
-        private const string DefaultUserAgent =
+        private string _userAgent =
             "VKAndroidApp/5.2.6-3146 (Android 13.3.7; SDK 228; armeabi-v7a; AudioBypass; en)";
 
-        private readonly HttpClient _httpClient;
-
-        /// <summary>
-        ///     The log
-        /// </summary>
         private readonly ILogger<RestClient> _logger;
 
-        private TimeSpan _timeoutSeconds;
 
         /// <inheritdoc />
-        public RestClientWithUserAgent(ILogger<RestClient> logger, HttpClient httpClient,
-            string userAgent = DefaultUserAgent)
+        public RestClientWithUserAgent(ILogger<RestClient> logger,
+            string userAgent = null)
         {
             _logger = logger;
-            _httpClient = httpClient;
-            _httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+            if (!string.IsNullOrWhiteSpace(userAgent))
+            {
+                _userAgent = userAgent;
+            }
         }
 
         public IWebProxy Proxy { get; set; }
 
         /// <inheritdoc />
-        public TimeSpan Timeout
-        {
-            get => _timeoutSeconds == TimeSpan.Zero ? TimeSpan.FromSeconds(300) : _timeoutSeconds;
-            set => _timeoutSeconds = value;
-        }
+        public TimeSpan Timeout { get; set; }
 
         /// <inheritdoc />
         public Task<HttpResponse<string>> GetAsync(Uri uri, IEnumerable<KeyValuePair<string, string>> parameters)
         {
-            var queries = parameters
-                .Where(parameter => !string.IsNullOrWhiteSpace(parameter.Value))
-                .Select(parameter => $"{parameter.Key.ToLowerInvariant()}={parameter.Value}");
-
-            var url = new UriBuilder(uri)
+            if (_logger != null)
             {
-                Query = string.Join("&", queries)
-            };
+                var uriBuilder = new UriBuilder(uri)
+                {
+                    Query = string.Join("&", parameters.Select(x => $"{x.Key}={x.Value}"))
+                };
 
-            _logger?.LogDebug($"GET request: {url.Uri}");
+                _logger.LogDebug($"GET request: {uriBuilder.Uri}");
+            }
 
-            var request = new HttpRequestMessage(HttpMethod.Get, url.Uri);
-
-            return CallAsync(httpClient => httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead));
+            return CallAsync(() => uri.ToString()
+                .AllowAnyHttpStatus()
+                .SetQueryParams(parameters)
+                .WithHeader("User-Agent", _userAgent)
+                .GetAsync());
         }
 
         /// <inheritdoc />
@@ -76,14 +70,21 @@ namespace VkNet.AudioBypassService.Utils
 
             var content = new FormUrlEncodedContent(parameters);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, uri) {Content = content};
-
-            return CallAsync(httpClient => httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead));
+            return CallAsync(() => uri.ToString()
+                .AllowAnyHttpStatus()
+                .WithHeader("User-Agent", _userAgent)
+                .PostAsync(content));
         }
 
-        private async Task<HttpResponse<string>> CallAsync(Func<HttpClient, Task<HttpResponseMessage>> method)
+        /// <inheritdoc />
+        public void Dispose()
         {
-            var response = await method(_httpClient).ConfigureAwait(false);
+            GC.SuppressFinalize(this);
+        }
+
+        private async Task<HttpResponse<string>> CallAsync(Func<Task<HttpResponseMessage>> method)
+        {
+            var response = await method().ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -93,25 +94,6 @@ namespace VkNet.AudioBypassService.Utils
             return response.IsSuccessStatusCode
                 ? HttpResponse<string>.Success(response.StatusCode, content, url)
                 : HttpResponse<string>.Fail(response.StatusCode, content, url);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _httpClient?.Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~RestClientWithUserAgent()
-        {
-            Dispose(false);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Flurl.Http;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using ProtoBuf;
@@ -17,13 +18,10 @@ namespace VkNet.AudioBypassService.Utils
         private const string GcmUserAgent = "Android-GCM/1.5 (generic_x86 KK)";
         private readonly string _appId;
 
-        private readonly HttpClient _httpClient;
         private readonly ILogger<FakeSafetyNetClient> _logger;
 
-        public FakeSafetyNetClient([NotNull] HttpClient httpClient, [CanBeNull] ILogger<FakeSafetyNetClient> logger)
+        public FakeSafetyNetClient([CanBeNull] ILogger<FakeSafetyNetClient> logger)
         {
-            _httpClient = httpClient;
-            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(GcmUserAgent);
             _logger = logger;
             _appId = RandomString.Generate(11);
         }
@@ -31,11 +29,6 @@ namespace VkNet.AudioBypassService.Utils
         public async Task<AndroidCheckinResponse> CheckIn()
         {
             _logger?.LogDebug($"{nameof(CheckIn)}");
-
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://android.clients.google.com/checkin")
-            {
-                Method = HttpMethod.Post
-            };
 
             var androidRequest = new AndroidCheckinRequest
             {
@@ -57,10 +50,13 @@ namespace VkNet.AudioBypassService.Utils
             var requestStream = new MemoryStream();
             Serializer.Serialize(requestStream, androidRequest);
 
-            request.Content = new ByteArrayContent(requestStream.ToArray());
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-protobuffer");
+            var content = new ByteArrayContent(requestStream.ToArray());
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-protobuffer");
 
-            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            var response = await "https://android.clients.google.com/checkin"
+                .WithHeader("User-Agent", GcmUserAgent)
+                .PostAsync(content);
+
             response.EnsureSuccessStatusCode();
 
             var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
@@ -72,21 +68,19 @@ namespace VkNet.AudioBypassService.Utils
         {
             _logger?.LogDebug($"{nameof(GetReceipt)}");
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://android.clients.google.com/c2dm/register3")
-            {
-                Method = HttpMethod.Post
-            };
-
-            request.Headers.Add("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}");
             var requestParams = GetRequestParams(credentials.AndroidId.ToString());
-            request.Content = new FormUrlEncodedContent(requestParams);
+            var content = new FormUrlEncodedContent(requestParams);
 
-            var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+            var response = await "https://android.clients.google.com/c2dm/register3"
+                .WithHeader("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}")
+                .WithHeader("User-Agent", GcmUserAgent)
+                .PostAsync(content);
+
             response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var result = content.Split(new[] {"|ID|2|:"}, StringSplitOptions.None)[1];
+            var result = responseString.Split(new[] {"|ID|2|:"}, StringSplitOptions.None)[1];
             if (result == "PHONE_REGISTRATION_ERROR")
                 throw new InvalidOperationException($"{nameof(GetReceipt)} bad response: {result}\n{content}");
 
