@@ -150,7 +150,7 @@ namespace VkNet.AudioBypassService.Utils
             }
         }
 
-        private async Task<string> RefreshToken(string oldToken, string receipt)
+        public async Task<string> RefreshToken(string oldToken, string receipt)
         {
             var response = await Call("auth.refreshToken", new VkParameters
             {
