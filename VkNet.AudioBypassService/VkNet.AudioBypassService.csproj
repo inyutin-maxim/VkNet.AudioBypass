@@ -15,7 +15,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" PrivateAssets="all" />
-        <PackageReference Include="VkNet" Version="1.44.0-152" />
+        <PackageReference Include="VkNet" Version="1.44.0-156" />
         <PackageReference Include="protobuf-net" Version="2.4.0" />
     </ItemGroup>
 </Project>
