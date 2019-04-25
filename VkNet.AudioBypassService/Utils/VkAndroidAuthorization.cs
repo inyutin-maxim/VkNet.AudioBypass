@@ -21,6 +21,8 @@ namespace VkNet.AudioBypassService.Utils
     [UsedImplicitly]
     public class VkAndroidAuthorization : IAuthorizationFlow
     {
+        public IReceiptParser ReceiptParser { get; }
+
         public VkAndroidAuthorization([NotNull] IVkApiVersionManager versionManager,
             [NotNull] IRestClient restClient,
             [NotNull] IReceiptParser parser,
@@ -29,7 +31,7 @@ namespace VkNet.AudioBypassService.Utils
         {
             _versionManager = versionManager;
             _restClient = restClient;
-            _parser = parser;
+            ReceiptParser = parser;
             _captchaSolver = captchaSolver;
             _logger = logger;
         }
@@ -40,7 +42,7 @@ namespace VkNet.AudioBypassService.Utils
             var authResult = await BaseAuth();
 
             _logger?.LogDebug("2. Получение receipt");
-            var receipt = await _parser.GetReceipt();
+            var receipt = await ReceiptParser.GetReceipt();
 
             if (string.IsNullOrWhiteSpace(receipt))
                 throw new VkApiException("receipt is null or empty");
@@ -171,8 +173,6 @@ namespace VkNet.AudioBypassService.Utils
         private readonly IRestClient _restClient;
 
         private readonly ILogger<VkAndroidAuthorization> _logger;
-
-        private readonly IReceiptParser _parser;
 
         private readonly ICaptchaSolver _captchaSolver;
 
