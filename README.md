@@ -1,5 +1,5 @@
 # VkNet.AudioBypass
-Расширение для [VkNet](https://github.com/vknet/vk) для обхода ограничения к методам **Audio**.
+Расширение для [VkNet](https://github.com/vknet/vk) для обхода ограничения к методам **Audio** и **Messages**.
 
 [![NuGet](https://img.shields.io/nuget/v/VkNet.AudioBypassService.svg)](https://www.nuget.org/packages/VkNet.AudioBypassService/)
 [![NuGet](https://img.shields.io/nuget/dt/VkNet.AudioBypassService.svg)](https://www.nuget.org/packages/VkNet.AudioBypassService/)
@@ -16,7 +16,7 @@ services.AddAudioBypass();
 
 var api = new VkApi(services);
 
-// Авторизируемся для получения токена валидного для вызова методов Audio
+// Авторизируемся для получения токена валидного для вызова методов Audio / Messages
 api.Authorize(new ApiAuthParams
 {
     Login = "login",
