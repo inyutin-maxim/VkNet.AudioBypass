@@ -39,16 +39,16 @@ namespace VkNet.AudioBypassService.Utils
         public async Task<AuthorizationResult> AuthorizeAsync()
         {
             _logger?.LogDebug("1. Авторизация");
-            var authResult = await BaseAuth();
+            var authResult = await BaseAuth().ConfigureAwait(false);
 
             _logger?.LogDebug("2. Получение receipt");
-            var receipt = await ReceiptParser.GetReceipt();
+            var receipt = await ReceiptParser.GetReceipt().ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(receipt))
                 throw new VkApiException("receipt is null or empty");
 
             _logger?.LogDebug("3. Обновление токена");
-            var newToken = await RefreshToken(authResult.AccessToken, receipt);
+            var newToken = await RefreshToken(authResult.AccessToken, receipt).ConfigureAwait(false);
 
             return new AuthorizationResult
             {
@@ -97,20 +97,21 @@ namespace VkNet.AudioBypassService.Utils
         private async Task<AuthorizationResult> BaseAuth()
         {
             var response = await CallBase("https://oauth.vk.com/token", new VkParameters
-            {
-                {"grant_type", "password"},
-                {"client_id", "2274003"},
-                {"client_secret", "hHbZxrka2uZ6jB1inYsH"},
-                {"2fa_supported", _apiAuthParams.TwoFactorSupported ?? true},
-                {"force_sms", _apiAuthParams.ForceSms},
-                {"username", _apiAuthParams.Login},
-                {"password", _apiAuthParams.Password},
-                {"captcha_sid", _apiAuthParams.CaptchaSid},
-                {"captcha_key", _apiAuthParams.CaptchaKey},
-                {"code", _apiAuthParams.Code},
-                {"scope", $"{_apiAuthParams.Settings}"},
-                {"v", _versionManager.Version}
-            });
+                {
+                    {"grant_type", "password"},
+                    {"client_id", "2274003"},
+                    {"client_secret", "hHbZxrka2uZ6jB1inYsH"},
+                    {"2fa_supported", _apiAuthParams.TwoFactorSupported ?? true},
+                    {"force_sms", _apiAuthParams.ForceSms},
+                    {"username", _apiAuthParams.Login},
+                    {"password", _apiAuthParams.Password},
+                    {"captcha_sid", _apiAuthParams.CaptchaSid},
+                    {"captcha_key", _apiAuthParams.CaptchaKey},
+                    {"code", _apiAuthParams.Code},
+                    {"scope", $"{_apiAuthParams.Settings}"},
+                    {"v", _versionManager.Version}
+                })
+                .ConfigureAwait(false);
 
             var error = response["error"];
 
@@ -128,7 +129,7 @@ namespace VkNet.AudioBypassService.Utils
                     var result = _apiAuthParams.TwoFactorAuthorization.Invoke();
                     _apiAuthParams.Code = result;
 
-                    return await BaseAuth();
+                    return await BaseAuth().ConfigureAwait(false);
                 case "invalid_request":
                 case "invalid_client":
                     var errorDescription = response["error_description"].ToString();
@@ -146,7 +147,7 @@ namespace VkNet.AudioBypassService.Utils
                     _apiAuthParams.CaptchaSid = sid;
                     _apiAuthParams.CaptchaKey = input;
 
-                    return await BaseAuth();
+                    return await BaseAuth().ConfigureAwait(false);
                 default:
                     throw new VkApiException($"Неизвестная ошибка:{Environment.NewLine}{response}");
             }
@@ -155,11 +156,12 @@ namespace VkNet.AudioBypassService.Utils
         public async Task<string> RefreshToken(string oldToken, string receipt)
         {
             var response = await Call("auth.refreshToken", new VkParameters
-            {
-                {"receipt", receipt},
-                {"access_token", oldToken},
-                {"v", _versionManager.Version}
-            }, true);
+                {
+                    {"receipt", receipt},
+                    {"access_token", oldToken},
+                    {"v", _versionManager.Version}
+                }, true)
+                .ConfigureAwait(false);
 
             return response["token"];
         }

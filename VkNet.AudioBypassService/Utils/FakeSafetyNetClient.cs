@@ -55,7 +55,8 @@ namespace VkNet.AudioBypassService.Utils
 
             var response = await "https://android.clients.google.com/checkin"
                 .WithHeader("User-Agent", GcmUserAgent)
-                .PostAsync(content);
+                .PostAsync(content)
+                .ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
@@ -74,7 +75,8 @@ namespace VkNet.AudioBypassService.Utils
             var response = await "https://android.clients.google.com/c2dm/register3"
                 .WithHeader("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}")
                 .WithHeader("User-Agent", GcmUserAgent)
-                .PostAsync(content);
+                .PostAsync(content)
+                .ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
