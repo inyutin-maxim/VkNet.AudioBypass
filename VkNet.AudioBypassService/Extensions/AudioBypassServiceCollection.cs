@@ -16,6 +16,7 @@ namespace VkNet.AudioBypassService.Extensions
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             services.TryAddSingleton<FakeSafetyNetClient>();
+            services.TryAddSingleton<IVkApiInvoker, VkApiInvoker>();
             services.TryAddSingleton<IAuthorizationFlow, VkAndroidAuthorization>();
             services.TryAddSingleton<IRestClient, RestClientWithUserAgent>();
             services.TryAddSingleton<IReceiptParser, ReceiptParser>();
