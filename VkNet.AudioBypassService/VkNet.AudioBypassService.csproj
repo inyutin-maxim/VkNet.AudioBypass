@@ -8,7 +8,7 @@
 		<PackageReleaseNotes>
 			Обновление до VkNet 1.44.0.
 		</PackageReleaseNotes>
-		<Authors>hikiblade;itsokto</Authors>
+		<Authors>shelln1ght;itsokto</Authors>
 		<RepositoryType>GIT</RepositoryType>
 		<RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
 		<PackageTags>vknet;vk;api;audio;bypass</PackageTags>
