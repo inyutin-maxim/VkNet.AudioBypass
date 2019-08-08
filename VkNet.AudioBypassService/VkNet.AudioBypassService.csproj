@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net40;net45;net461</TargetFrameworks>
-        <Version>1.4.1</Version>
-        <Description>
-            Расширение для VkNet для обхода ограничения к методам Audios ВКонтакте API.
-        </Description>
-        <PackageReleaseNotes>
-            Обновление до VkNet 1.44.0.
-        </PackageReleaseNotes>
-        <Authors>hikiblade;itsokto</Authors>
-        <RepositoryType>GIT</RepositoryType>
-        <RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
-        <PackageTags>vknet;vk;api;audio;bypass</PackageTags>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" PrivateAssets="all" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="7.14.0.8411" PrivateAssets="all" />
-        <PackageReference Include="VkNet" Version="1.44.0" />
-        <PackageReference Include="protobuf-net" Version="2.4.0" />
-    </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net40;net45;net461</TargetFrameworks>
+		<Version>1.4.1</Version>
+		<Description>
+			Расширение для VkNet для обхода ограничения к методам Audios ВКонтакте API.
+		</Description>
+		<PackageReleaseNotes>
+			Обновление до VkNet 1.44.0.
+		</PackageReleaseNotes>
+		<Authors>hikiblade;itsokto</Authors>
+		<RepositoryType>GIT</RepositoryType>
+		<RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
+		<PackageTags>vknet;vk;api;audio;bypass</PackageTags>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2019.1.1" PrivateAssets="all" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="7.14.0.8411" PrivateAssets="all" />
+		<PackageReference Include="VkNet" Version="1.45.0" />
+		<PackageReference Include="protobuf-net" Version="2.4.0" />
+	</ItemGroup>
 </Project>
