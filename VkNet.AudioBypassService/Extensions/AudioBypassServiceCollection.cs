@@ -9,19 +9,22 @@ using VkNet.AudioBypassService.Utils;
 
 namespace VkNet.AudioBypassService.Extensions
 {
-    public static class AudioBypassServiceCollection
-    {
-        public static IServiceCollection AddAudioBypass([NotNull] this IServiceCollection services)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+	public static class AudioBypassServiceCollection
+	{
+		public static IServiceCollection AddAudioBypass([NotNull] this IServiceCollection services)
+		{
+			if (services == null)
+			{
+				throw new ArgumentNullException(nameof(services));
+			}
 
-            services.TryAddSingleton<FakeSafetyNetClient>();
-            services.TryAddSingleton<IVkApiInvoker, VkApiInvoker>();
-            services.TryAddSingleton<IAuthorizationFlow, VkAndroidAuthorization>();
-            services.TryAddSingleton<IRestClient, RestClientWithUserAgent>();
-            services.TryAddSingleton<IReceiptParser, ReceiptParser>();
+			services.TryAddSingleton<FakeSafetyNetClient>();
+			services.TryAddSingleton<IVkApiInvoker, VkApiInvoker>();
+			services.TryAddSingleton<IAuthorizationFlow, VkAndroidAuthorization>();
+			services.TryAddSingleton<IRestClient, RestClientWithUserAgent>();
+			services.TryAddSingleton<IReceiptParser, ReceiptParser>();
 
-            return services;
-        }
-    }
+			return services;
+		}
+	}
 }

@@ -36,7 +36,9 @@ namespace VkNet.AudioBypassService.Utils
 			var receipt = await ReceiptParser.GetReceipt().ConfigureAwait(false);
 
 			if (string.IsNullOrWhiteSpace(receipt))
+			{
 				throw new VkApiException("receipt is null or empty");
+			}
 
 			_logger?.LogDebug("3. Обновление токена");
 			var newToken = await RefreshTokenAsync(authResult.AccessToken, receipt).ConfigureAwait(false);
@@ -81,8 +83,10 @@ namespace VkNet.AudioBypassService.Utils
 						_logger?.LogDebug("Требуется ввести код двухфакторной авторизации");
 
 						if (_apiAuthParams.TwoFactorAuthorization == null)
+						{
 							throw new
 								InvalidOperationException($"Two-factor authorization required, but {nameof(_apiAuthParams.TwoFactorAuthorization)} callback is null. Set {nameof(_apiAuthParams.TwoFactorAuthorization)} callback to handle two-factor authorization.");
+						}
 
 						var result = _apiAuthParams.TwoFactorAuthorization();
 						_apiAuthParams.Code = result;

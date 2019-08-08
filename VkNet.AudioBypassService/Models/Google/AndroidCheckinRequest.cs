@@ -10,325 +10,343 @@ using ProtoBuf;
 
 namespace VkNet.AudioBypassService.Models.Google
 {
-    [ProtoContract]
-    public class AndroidCheckinRequest : IExtensible
-    {
-        private string __pbn__DesiredBuild;
-        private string __pbn__Digest;
-        private string __pbn__Esn;
-        private IExtension __pbn__extensionData;
-        private int? __pbn__Fragment;
-        private long? __pbn__Id;
-        private string __pbn__Imei;
-        private string __pbn__Locale;
-        private long? __pbn__LoggingId;
-        private string __pbn__MarketCheckin;
-        private string __pbn__Meid;
-        private ulong? __pbn__SecurityToken;
-        private string __pbn__SerialNumber;
-        private string __pbn__TimeZone;
-        private string __pbn__UserName;
-        private int? __pbn__UserSerialNumber;
-        private int? __pbn__Version;
+	[ProtoContract]
+	public class AndroidCheckinRequest : IExtensible
+	{
+		private string __pbn__DesiredBuild;
 
-        [ProtoMember(1, Name = @"imei")]
-        [DefaultValue("")]
-        public string Imei
-        {
-            get => __pbn__Imei ?? "";
-            set => __pbn__Imei = value;
-        }
+		private string __pbn__Digest;
 
-        [ProtoMember(10, Name = @"meid")]
-        [DefaultValue("")]
-        public string Meid
-        {
-            get => __pbn__Meid ?? "";
-            set => __pbn__Meid = value;
-        }
+		private string __pbn__Esn;
 
-        [ProtoMember(9, Name = @"mac_addr")] public List<string> MacAddrs { get; } = new List<string>();
+		private IExtension __pbn__extensionData;
 
-        [ProtoMember(19, Name = @"mac_addr_type")]
-        public List<string> MacAddrTypes { get; } = new List<string>();
+		private int? __pbn__Fragment;
 
-        [ProtoMember(16, Name = @"serial_number")]
-        [DefaultValue("")]
-        public string SerialNumber
-        {
-            get => __pbn__SerialNumber ?? "";
-            set => __pbn__SerialNumber = value;
-        }
+		private long? __pbn__Id;
 
-        [ProtoMember(17, Name = @"esn")]
-        [DefaultValue("")]
-        public string Esn
-        {
-            get => __pbn__Esn ?? "";
-            set => __pbn__Esn = value;
-        }
+		private string __pbn__Imei;
 
-        [ProtoMember(2, Name = @"id")]
-        public long Id
-        {
-            get => __pbn__Id.GetValueOrDefault();
-            set => __pbn__Id = value;
-        }
+		private string __pbn__Locale;
 
-        [ProtoMember(7, Name = @"logging_id")]
-        public long LoggingId
-        {
-            get => __pbn__LoggingId.GetValueOrDefault();
-            set => __pbn__LoggingId = value;
-        }
+		private long? __pbn__LoggingId;
 
-        [ProtoMember(3, Name = @"digest")]
-        [DefaultValue("")]
-        public string Digest
-        {
-            get => __pbn__Digest ?? "";
-            set => __pbn__Digest = value;
-        }
+		private string __pbn__MarketCheckin;
 
-        [ProtoMember(6, Name = @"locale")]
-        [DefaultValue("")]
-        public string Locale
-        {
-            get => __pbn__Locale ?? "";
-            set => __pbn__Locale = value;
-        }
+		private string __pbn__Meid;
 
-        [ProtoMember(4, Name = @"checkin", IsRequired = true)]
-        public AndroidCheckinProto Checkin { get; set; }
+		private ulong? __pbn__SecurityToken;
 
-        [ProtoMember(5, Name = @"desired_build")]
-        [DefaultValue("")]
-        public string DesiredBuild
-        {
-            get => __pbn__DesiredBuild ?? "";
-            set => __pbn__DesiredBuild = value;
-        }
+		private string __pbn__SerialNumber;
 
-        [ProtoMember(8, Name = @"market_checkin")]
-        [DefaultValue("")]
-        public string MarketCheckin
-        {
-            get => __pbn__MarketCheckin ?? "";
-            set => __pbn__MarketCheckin = value;
-        }
+		private string __pbn__TimeZone;
 
-        [ProtoMember(11, Name = @"account_cookie")]
-        public List<string> AccountCookies { get; } = new List<string>();
+		private string __pbn__UserName;
 
-        [ProtoMember(12, Name = @"time_zone")]
-        [DefaultValue("")]
-        public string TimeZone
-        {
-            get => __pbn__TimeZone ?? "";
-            set => __pbn__TimeZone = value;
-        }
+		private int? __pbn__UserSerialNumber;
 
-        [ProtoMember(13, Name = @"security_token", DataFormat = DataFormat.FixedSize)]
-        public ulong SecurityToken
-        {
-            get => __pbn__SecurityToken.GetValueOrDefault();
-            set => __pbn__SecurityToken = value;
-        }
+		private int? __pbn__Version;
 
-        [ProtoMember(14, Name = @"version")]
-        public int Version
-        {
-            get => __pbn__Version.GetValueOrDefault();
-            set => __pbn__Version = value;
-        }
+		[ProtoMember(1, Name = @"imei")]
+		[DefaultValue("")]
+		public string Imei
+		{
+			get => __pbn__Imei ?? "";
+			set => __pbn__Imei = value;
+		}
 
-        [ProtoMember(15, Name = @"ota_cert")] public List<string> OtaCerts { get; } = new List<string>();
+		[ProtoMember(10, Name = @"meid")]
+		[DefaultValue("")]
+		public string Meid
+		{
+			get => __pbn__Meid ?? "";
+			set => __pbn__Meid = value;
+		}
 
-        [ProtoMember(20, Name = @"fragment")]
-        public int Fragment
-        {
-            get => __pbn__Fragment.GetValueOrDefault();
-            set => __pbn__Fragment = value;
-        }
+		[ProtoMember(9, Name = @"mac_addr")]
+		public List<string> MacAddrs { get; } = new List<string>();
 
-        [ProtoMember(21, Name = @"user_name")]
-        [DefaultValue("")]
-        public string UserName
-        {
-            get => __pbn__UserName ?? "";
-            set => __pbn__UserName = value;
-        }
+		[ProtoMember(19, Name = @"mac_addr_type")]
+		public List<string> MacAddrTypes { get; } = new List<string>();
 
-        [ProtoMember(22, Name = @"user_serial_number")]
-        public int UserSerialNumber
-        {
-            get => __pbn__UserSerialNumber.GetValueOrDefault();
-            set => __pbn__UserSerialNumber = value;
-        }
+		[ProtoMember(16, Name = @"serial_number")]
+		[DefaultValue("")]
+		public string SerialNumber
+		{
+			get => __pbn__SerialNumber ?? "";
+			set => __pbn__SerialNumber = value;
+		}
 
-        IExtension IExtensible.GetExtensionObject(bool createIfMissing)
-        {
-            return Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
-        }
+		[ProtoMember(17, Name = @"esn")]
+		[DefaultValue("")]
+		public string Esn
+		{
+			get => __pbn__Esn ?? "";
+			set => __pbn__Esn = value;
+		}
 
-        public bool ShouldSerializeImei()
-        {
-            return __pbn__Imei != null;
-        }
+		[ProtoMember(2, Name = @"id")]
+		public long Id
+		{
+			get => __pbn__Id.GetValueOrDefault();
+			set => __pbn__Id = value;
+		}
 
-        public void ResetImei()
-        {
-            __pbn__Imei = null;
-        }
+		[ProtoMember(7, Name = @"logging_id")]
+		public long LoggingId
+		{
+			get => __pbn__LoggingId.GetValueOrDefault();
+			set => __pbn__LoggingId = value;
+		}
 
-        public bool ShouldSerializeMeid()
-        {
-            return __pbn__Meid != null;
-        }
+		[ProtoMember(3, Name = @"digest")]
+		[DefaultValue("")]
+		public string Digest
+		{
+			get => __pbn__Digest ?? "";
+			set => __pbn__Digest = value;
+		}
 
-        public void ResetMeid()
-        {
-            __pbn__Meid = null;
-        }
+		[ProtoMember(6, Name = @"locale")]
+		[DefaultValue("")]
+		public string Locale
+		{
+			get => __pbn__Locale ?? "";
+			set => __pbn__Locale = value;
+		}
 
-        public bool ShouldSerializeSerialNumber()
-        {
-            return __pbn__SerialNumber != null;
-        }
+		[ProtoMember(4, Name = @"checkin", IsRequired = true)]
+		public AndroidCheckinProto Checkin { get; set; }
 
-        public void ResetSerialNumber()
-        {
-            __pbn__SerialNumber = null;
-        }
+		[ProtoMember(5, Name = @"desired_build")]
+		[DefaultValue("")]
+		public string DesiredBuild
+		{
+			get => __pbn__DesiredBuild ?? "";
+			set => __pbn__DesiredBuild = value;
+		}
 
-        public bool ShouldSerializeEsn()
-        {
-            return __pbn__Esn != null;
-        }
+		[ProtoMember(8, Name = @"market_checkin")]
+		[DefaultValue("")]
+		public string MarketCheckin
+		{
+			get => __pbn__MarketCheckin ?? "";
+			set => __pbn__MarketCheckin = value;
+		}
 
-        public void ResetEsn()
-        {
-            __pbn__Esn = null;
-        }
+		[ProtoMember(11, Name = @"account_cookie")]
+		public List<string> AccountCookies { get; } = new List<string>();
 
-        public bool ShouldSerializeId()
-        {
-            return __pbn__Id != null;
-        }
+		[ProtoMember(12, Name = @"time_zone")]
+		[DefaultValue("")]
+		public string TimeZone
+		{
+			get => __pbn__TimeZone ?? "";
+			set => __pbn__TimeZone = value;
+		}
 
-        public void ResetId()
-        {
-            __pbn__Id = null;
-        }
+		[ProtoMember(13, Name = @"security_token", DataFormat = DataFormat.FixedSize)]
+		public ulong SecurityToken
+		{
+			get => __pbn__SecurityToken.GetValueOrDefault();
+			set => __pbn__SecurityToken = value;
+		}
 
-        public bool ShouldSerializeLoggingId()
-        {
-            return __pbn__LoggingId != null;
-        }
+		[ProtoMember(14, Name = @"version")]
+		public int Version
+		{
+			get => __pbn__Version.GetValueOrDefault();
+			set => __pbn__Version = value;
+		}
 
-        public void ResetLoggingId()
-        {
-            __pbn__LoggingId = null;
-        }
+		[ProtoMember(15, Name = @"ota_cert")]
+		public List<string> OtaCerts { get; } = new List<string>();
 
-        public bool ShouldSerializeDigest()
-        {
-            return __pbn__Digest != null;
-        }
+		[ProtoMember(20, Name = @"fragment")]
+		public int Fragment
+		{
+			get => __pbn__Fragment.GetValueOrDefault();
+			set => __pbn__Fragment = value;
+		}
 
-        public void ResetDigest()
-        {
-            __pbn__Digest = null;
-        }
+		[ProtoMember(21, Name = @"user_name")]
+		[DefaultValue("")]
+		public string UserName
+		{
+			get => __pbn__UserName ?? "";
+			set => __pbn__UserName = value;
+		}
 
-        public bool ShouldSerializeLocale()
-        {
-            return __pbn__Locale != null;
-        }
+		[ProtoMember(22, Name = @"user_serial_number")]
+		public int UserSerialNumber
+		{
+			get => __pbn__UserSerialNumber.GetValueOrDefault();
+			set => __pbn__UserSerialNumber = value;
+		}
 
-        public void ResetLocale()
-        {
-            __pbn__Locale = null;
-        }
+		IExtension IExtensible.GetExtensionObject(bool createIfMissing)
+		{
+			return Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+		}
 
-        public bool ShouldSerializeDesiredBuild()
-        {
-            return __pbn__DesiredBuild != null;
-        }
+		public bool ShouldSerializeImei()
+		{
+			return __pbn__Imei != null;
+		}
 
-        public void ResetDesiredBuild()
-        {
-            __pbn__DesiredBuild = null;
-        }
+		public void ResetImei()
+		{
+			__pbn__Imei = null;
+		}
 
-        public bool ShouldSerializeMarketCheckin()
-        {
-            return __pbn__MarketCheckin != null;
-        }
+		public bool ShouldSerializeMeid()
+		{
+			return __pbn__Meid != null;
+		}
 
-        public void ResetMarketCheckin()
-        {
-            __pbn__MarketCheckin = null;
-        }
+		public void ResetMeid()
+		{
+			__pbn__Meid = null;
+		}
 
-        public bool ShouldSerializeTimeZone()
-        {
-            return __pbn__TimeZone != null;
-        }
+		public bool ShouldSerializeSerialNumber()
+		{
+			return __pbn__SerialNumber != null;
+		}
 
-        public void ResetTimeZone()
-        {
-            __pbn__TimeZone = null;
-        }
+		public void ResetSerialNumber()
+		{
+			__pbn__SerialNumber = null;
+		}
 
-        public bool ShouldSerializeSecurityToken()
-        {
-            return __pbn__SecurityToken != null;
-        }
+		public bool ShouldSerializeEsn()
+		{
+			return __pbn__Esn != null;
+		}
 
-        public void ResetSecurityToken()
-        {
-            __pbn__SecurityToken = null;
-        }
+		public void ResetEsn()
+		{
+			__pbn__Esn = null;
+		}
 
-        public bool ShouldSerializeVersion()
-        {
-            return __pbn__Version != null;
-        }
+		public bool ShouldSerializeId()
+		{
+			return __pbn__Id != null;
+		}
 
-        public void ResetVersion()
-        {
-            __pbn__Version = null;
-        }
+		public void ResetId()
+		{
+			__pbn__Id = null;
+		}
 
-        public bool ShouldSerializeFragment()
-        {
-            return __pbn__Fragment != null;
-        }
+		public bool ShouldSerializeLoggingId()
+		{
+			return __pbn__LoggingId != null;
+		}
 
-        public void ResetFragment()
-        {
-            __pbn__Fragment = null;
-        }
+		public void ResetLoggingId()
+		{
+			__pbn__LoggingId = null;
+		}
 
-        public bool ShouldSerializeUserName()
-        {
-            return __pbn__UserName != null;
-        }
+		public bool ShouldSerializeDigest()
+		{
+			return __pbn__Digest != null;
+		}
 
-        public void ResetUserName()
-        {
-            __pbn__UserName = null;
-        }
+		public void ResetDigest()
+		{
+			__pbn__Digest = null;
+		}
 
-        public bool ShouldSerializeUserSerialNumber()
-        {
-            return __pbn__UserSerialNumber != null;
-        }
+		public bool ShouldSerializeLocale()
+		{
+			return __pbn__Locale != null;
+		}
 
-        public void ResetUserSerialNumber()
-        {
-            __pbn__UserSerialNumber = null;
-        }
-    }
+		public void ResetLocale()
+		{
+			__pbn__Locale = null;
+		}
+
+		public bool ShouldSerializeDesiredBuild()
+		{
+			return __pbn__DesiredBuild != null;
+		}
+
+		public void ResetDesiredBuild()
+		{
+			__pbn__DesiredBuild = null;
+		}
+
+		public bool ShouldSerializeMarketCheckin()
+		{
+			return __pbn__MarketCheckin != null;
+		}
+
+		public void ResetMarketCheckin()
+		{
+			__pbn__MarketCheckin = null;
+		}
+
+		public bool ShouldSerializeTimeZone()
+		{
+			return __pbn__TimeZone != null;
+		}
+
+		public void ResetTimeZone()
+		{
+			__pbn__TimeZone = null;
+		}
+
+		public bool ShouldSerializeSecurityToken()
+		{
+			return __pbn__SecurityToken != null;
+		}
+
+		public void ResetSecurityToken()
+		{
+			__pbn__SecurityToken = null;
+		}
+
+		public bool ShouldSerializeVersion()
+		{
+			return __pbn__Version != null;
+		}
+
+		public void ResetVersion()
+		{
+			__pbn__Version = null;
+		}
+
+		public bool ShouldSerializeFragment()
+		{
+			return __pbn__Fragment != null;
+		}
+
+		public void ResetFragment()
+		{
+			__pbn__Fragment = null;
+		}
+
+		public bool ShouldSerializeUserName()
+		{
+			return __pbn__UserName != null;
+		}
+
+		public void ResetUserName()
+		{
+			__pbn__UserName = null;
+		}
+
+		public bool ShouldSerializeUserSerialNumber()
+		{
+			return __pbn__UserSerialNumber != null;
+		}
+
+		public void ResetUserSerialNumber()
+		{
+			__pbn__UserSerialNumber = null;
+		}
+	}
 }
