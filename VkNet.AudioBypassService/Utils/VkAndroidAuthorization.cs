@@ -71,7 +71,7 @@ namespace VkNet.AudioBypassService.Utils
 																			  { "username", _apiAuthParams.Login },
 																			  { "password", _apiAuthParams.Password },
 																			  { "code", _apiAuthParams.Code },
-																			  { "scope", $"{_apiAuthParams.Settings}" }
+																			  { "scope", "all" }
 																		  })
 										  .ConfigureAwait(false);
 			}
