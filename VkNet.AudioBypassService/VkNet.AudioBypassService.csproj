@@ -11,6 +11,7 @@
 		<Authors>shelln1ght;itsokto</Authors>
 		<RepositoryType>GIT</RepositoryType>
 		<RepositoryUrl>https://github.com/atckun/VkNetMusicBypass</RepositoryUrl>
+		<PackageId>VkNet.AudioBypassService</PackageId>
 		<PackageTags>vknet;vk;api;audio;bypass</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
