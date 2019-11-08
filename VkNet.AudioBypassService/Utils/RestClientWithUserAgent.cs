@@ -17,18 +17,14 @@ namespace VkNet.AudioBypassService.Utils
 	[UsedImplicitly]
 	public class RestClientWithUserAgent : IRestClient
 	{
-		private readonly string _userAgent = "VKAndroidApp/5.2.6-3146 (Android 13.3.7; SDK 228; armeabi-v7a; AudioBypass; en)";
+		private static IDictionary<string, string> _headers;
 
 		private readonly ILogger<RestClient> _logger;
 
 		/// <inheritdoc />
-		public RestClientWithUserAgent(ILogger<RestClient> logger, string userAgent = null)
+		public RestClientWithUserAgent(ILogger<RestClient> logger)
 		{
 			_logger = logger;
-			if (!string.IsNullOrWhiteSpace(userAgent))
-			{
-				_userAgent = userAgent;
-			}
 		}
 
 		public IWebProxy Proxy { get; set; }
@@ -46,7 +42,12 @@ namespace VkNet.AudioBypassService.Utils
 				_logger.LogDebug($"GET request: {uriBuilder.Uri}");
 			}
 
-			return CallAsync(() => uri.ToString().AllowAnyHttpStatus().SetQueryParams(parameters).WithHeader("User-Agent", _userAgent).GetAsync());
+			var flurlRequest = uri.ToString()
+								  .AllowAnyHttpStatus()
+								  .SetQueryParams(parameters)
+								  .WithHeaders(GetHeaders());
+
+			return CallAsync(() => flurlRequest.GetAsync());
 		}
 
 		/// <inheritdoc />
@@ -60,7 +61,12 @@ namespace VkNet.AudioBypassService.Utils
 
 			var content = new FormUrlEncodedContent(parameters);
 
-			return CallAsync(() => uri.ToString().AllowAnyHttpStatus().WithHeader("User-Agent", _userAgent).PostAsync(content));
+			var flurlRequest = uri.ToString()
+								  .AllowAnyHttpStatus()
+								  .SetQueryParams(parameters)
+								  .WithHeaders(GetHeaders());
+
+			return CallAsync(() => flurlRequest.PostAsync(content));
 		}
 
 		/// <inheritdoc />
@@ -81,6 +87,15 @@ namespace VkNet.AudioBypassService.Utils
 			return response.IsSuccessStatusCode
 				? HttpResponse<string>.Success(response.StatusCode, content, url)
 				: HttpResponse<string>.Fail(response.StatusCode, content, url);
+		}
+
+		private static IDictionary<string, string> GetHeaders()
+		{
+			return _headers ?? (_headers = new Dictionary<string, string>
+			{
+				{ "User-Agent", "VKAndroidApp/5.47.1-4248 (Android 9; SDK 28; armeabi-v7a; Android; ru; 1920x1080)" },
+				{ "x-vk-android-client", "new" }
+			});
 		}
 	}
 }
