@@ -15,6 +15,18 @@ namespace VkNet.AudioBypassService.Utils
 	[UsedImplicitly]
 	public class VkAndroidAuthorization : IAuthorizationFlow
 	{
+		#region Private Fields
+
+		private IApiAuthParams _apiAuthParams;
+
+		[NotNull]
+		private readonly IVkApiInvoker _vkApiInvoker;
+
+		[CanBeNull]
+		private readonly ILogger<VkAndroidAuthorization> _logger;
+
+		#endregion
+
 		[NotNull]
 		public IReceiptParser ReceiptParser { get; }
 
@@ -56,24 +68,25 @@ namespace VkNet.AudioBypassService.Utils
 			_apiAuthParams = authorizationParams;
 		}
 
-		private async Task<AuthorizationResult> BaseAuthAsync()
+		private Task<AuthorizationResult> BaseAuthAsync()
 		{
 			try
 			{
-				return await _vkApiInvoker.CallAsync<AuthorizationResult>(new Uri("https://oauth.vk.com/token"),
-																		  new VkParameters
-																		  {
-																			  { "grant_type", "password" },
-																			  { "client_id", "2274003" },
-																			  { "client_secret", "hHbZxrka2uZ6jB1inYsH" },
-																			  { "2fa_supported", _apiAuthParams.TwoFactorSupported ?? true },
-																			  { "force_sms", _apiAuthParams.ForceSms },
-																			  { "username", _apiAuthParams.Login },
-																			  { "password", _apiAuthParams.Password },
-																			  { "code", _apiAuthParams.Code },
-																			  { "scope", "all" }
-																		  })
-										  .ConfigureAwait(false);
+				var parameters = new VkParameters
+				{
+					{ "grant_type", "password" },
+					{ "client_id", "2274003" },
+					{ "client_secret", "hHbZxrka2uZ6jB1inYsH" },
+					{ "2fa_supported", _apiAuthParams.TwoFactorSupported ?? true },
+					{ "force_sms", _apiAuthParams.ForceSms },
+					{ "username", _apiAuthParams.Login },
+					{ "password", _apiAuthParams.Password },
+					{ "code", _apiAuthParams.Code },
+					{ "scope", "all" },
+					{ "device_id", RandomString.Generate(16) }
+				};
+
+				return _vkApiInvoker.CallAsync<AuthorizationResult>(new Uri("https://oauth.vk.com/token"), parameters);
 			}
 			catch (VkAuthException exception)
 			{
@@ -91,7 +104,7 @@ namespace VkNet.AudioBypassService.Utils
 						var result = _apiAuthParams.TwoFactorAuthorization();
 						_apiAuthParams.Code = result;
 
-						return await BaseAuthAsync().ConfigureAwait(false);
+						return BaseAuthAsync();
 					default:
 						throw;
 				}
@@ -100,26 +113,15 @@ namespace VkNet.AudioBypassService.Utils
 
 		public async Task<string> RefreshTokenAsync(string oldToken, string receipt)
 		{
-			var response = await _vkApiInvoker.CallAsync("auth.refreshToken", new VkParameters
-											  {
-												  { "receipt", receipt },
-												  { "access_token", oldToken }
-											  })
-											  .ConfigureAwait(false);
+			var parameters = new VkParameters
+			{
+				{ "receipt", receipt },
+				{ "access_token", oldToken }
+			};
+
+			var response = await _vkApiInvoker.CallAsync("auth.refreshToken", parameters).ConfigureAwait(false);
 
 			return response["token"]?.ToString();
 		}
-
-	#region Private Fields
-
-		private IApiAuthParams _apiAuthParams;
-
-		[NotNull]
-		private readonly IVkApiInvoker _vkApiInvoker;
-
-		[CanBeNull]
-		private readonly ILogger<VkAndroidAuthorization> _logger;
-
-	#endregion
 	}
 }
