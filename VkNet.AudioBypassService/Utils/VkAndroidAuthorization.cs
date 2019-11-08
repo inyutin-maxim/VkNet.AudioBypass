@@ -68,7 +68,7 @@ namespace VkNet.AudioBypassService.Utils
 			_apiAuthParams = authorizationParams;
 		}
 
-		private Task<AuthorizationResult> BaseAuthAsync()
+		private async Task<AuthorizationResult> BaseAuthAsync()
 		{
 			try
 			{
@@ -86,7 +86,7 @@ namespace VkNet.AudioBypassService.Utils
 					{ "device_id", RandomString.Generate(16) }
 				};
 
-				return _vkApiInvoker.CallAsync<AuthorizationResult>(new Uri("https://oauth.vk.com/token"), parameters);
+				return await _vkApiInvoker.CallAsync<AuthorizationResult>(new Uri("https://oauth.vk.com/token"), parameters).ConfigureAwait(false);
 			}
 			catch (VkAuthException exception)
 			{
@@ -104,7 +104,7 @@ namespace VkNet.AudioBypassService.Utils
 						var result = _apiAuthParams.TwoFactorAuthorization();
 						_apiAuthParams.Code = result;
 
-						return BaseAuthAsync();
+						return await BaseAuthAsync().ConfigureAwait(false);
 					default:
 						throw;
 				}
