@@ -1,5 +1,5 @@
-using System;
-using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace VkNet.AudioBypassService.Utils
 {
@@ -7,11 +7,21 @@ namespace VkNet.AudioBypassService.Utils
 	{
 		private const string Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-";
 
-		private static readonly Random Random = new Random();
-
 		public static string Generate(int length)
 		{
-			return new string(Enumerable.Range(1, length).Select(_ => Chars[Random.Next(Chars.Length)]).ToArray());
+			var bytes = new byte[length];
+			using (var crypto = new RNGCryptoServiceProvider())
+			{
+				crypto.GetBytes(bytes);
+			}
+
+			var result = new StringBuilder(length);
+			foreach (var _byte in bytes)
+			{
+				result.Append(Chars[_byte % Chars.Length]);
+			}
+
+			return result.ToString();
 		}
 	}
 }
