@@ -22,14 +22,17 @@ namespace VkNet.AudioBypassService.Utils
 
 			var registerResponse = await _safetyNetClient.Register(checkinResponse).ConfigureAwait(false);
 
-			var result = registerResponse.Split(new[] { "=" }, StringSplitOptions.None).LastOrDefault();
+			var result = registerResponse.Split(new[] { "=" }, StringSplitOptions.None);
 
-			if (result == null || result == "PHONE_REGISTRATION_ERROR")
+			var key = result.FirstOrDefault();
+			var value = result.LastOrDefault();
+
+			if (key == null || value == null || key.ToLower() == "error")
 			{
 				throw new InvalidOperationException($"Bad Response: {registerResponse}");
 			}
 
-			return registerResponse.Remove(0, 7);
+			return value;
 		}
 	}
 }
