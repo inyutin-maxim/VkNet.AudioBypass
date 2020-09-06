@@ -68,9 +68,14 @@ namespace VkNet.AudioBypassService.Utils
 			var requestParams = GetRegisterRequestParams(RandomString.Generate(11), credentials.AndroidId.ToString());
 
 			var content = new FormUrlEncodedContent(requestParams);
-			content.Headers.TryAddWithoutValidation("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}");
 
-			var response = await _httpClient.PostAsync("https://android.clients.google.com/c2dm/register3", content).ConfigureAwait(false);
+			var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "https://android.clients.google.com/c2dm/register3")
+			{
+				Content = content
+			};
+			httpRequestMessage.Headers.TryAddWithoutValidation("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}");
+			
+			var response = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
 			response.EnsureSuccessStatusCode();
 
