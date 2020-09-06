@@ -1,5 +1,4 @@
 using VkNet.AudioBypassService.Exceptions;
-using VkNet.AudioBypassService.Models;
 using VkNet.Exception;
 using VkNet.Model;
 

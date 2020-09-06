@@ -1,8 +1,10 @@
+using System;
 using JetBrains.Annotations;
-using VkNet.AudioBypassService.Models;
+using VkNet.Model;
 
 namespace VkNet.AudioBypassService.Exceptions
 {
+	[Serializable]
 	public class VkAuthException : System.Exception
 	{
 		[NotNull]

@@ -65,7 +65,7 @@ namespace VkNet.AudioBypassService.Utils
 
 			var response = jObject["response"];
 
-			return response.ToObject<T>(DefaultJsonSerializer);
+			return response != null ? response.ToObject<T>(DefaultJsonSerializer) : default;
 		}
 
 		public Task<JToken> CallAsync(string methodName, VkParameters parameters, CancellationToken cancellationToken = default)

@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using VkNet.AudioBypassService.Models;
 using VkNet.Exception;
+using VkNet.Model;
 
 namespace VkNet.AudioBypassService.Utils
 {

@@ -1,33 +1,30 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Flurl.Http;
 using JetBrains.Annotations;
-using Microsoft.Extensions.Logging;
 using ProtoBuf;
 using VkNet.AudioBypassService.Models.Google;
 
 namespace VkNet.AudioBypassService.Utils
 {
 	[UsedImplicitly]
-	internal class FakeSafetyNetClient
+	internal class FakeSafetyNetClient : IDisposable
 	{
 		private const string GcmUserAgent = "Android-GCM/1.5 (generic_x86 KK)";
 
-		[CanBeNull]
-		private readonly ILogger<FakeSafetyNetClient> _logger;
+		private readonly HttpClient _httpClient;
 
-		public FakeSafetyNetClient([CanBeNull] ILogger<FakeSafetyNetClient> logger)
+		public FakeSafetyNetClient()
 		{
-			_logger = logger;
+			_httpClient = new HttpClient();
+			_httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(GcmUserAgent);
 		}
 
 		public async Task<AndroidCheckinResponse> CheckIn()
 		{
-			_logger?.LogDebug($"{nameof(CheckIn)}");
-
 			var androidRequest = new AndroidCheckinRequest
 			{
 				Checkin = new AndroidCheckinProto
@@ -41,7 +38,10 @@ namespace VkNet.AudioBypassService.Utils
 				Locale = "en_US",
 				LoggingId = -8212629671123625360,
 				Meid = "358240051111110",
-				OtaCerts = { "71Q6Rn2DDZl1zPDVaaeEHItd+Yg=" },
+				OtaCerts =
+				{
+					"71Q6Rn2DDZl1zPDVaaeEHItd+Yg="
+				},
 				TimeZone = "America/New_York",
 				Version = 3
 			};
@@ -52,34 +52,31 @@ namespace VkNet.AudioBypassService.Utils
 			var content = new ByteArrayContent(requestStream.ToArray());
 			content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-protobuffer");
 
-			var response = await "https://android.clients.google.com/checkin"
-								 .WithHeader("User-Agent", GcmUserAgent)
-								 .PostAsync(content)
-								 .ConfigureAwait(false);
+			var response = await _httpClient.PostAsync("https://android.clients.google.com/checkin", content).ConfigureAwait(false);
 
 			response.EnsureSuccessStatusCode();
 
 			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-			return Serializer.Deserialize<AndroidCheckinResponse>(responseStream);
+			var androidCheckinResponse = Serializer.Deserialize<AndroidCheckinResponse>(responseStream);
+
+			return androidCheckinResponse;
 		}
 
 		public async Task<string> Register(AndroidCheckinResponse credentials)
 		{
-			_logger?.LogDebug($"{nameof(Register)}");
-
 			var requestParams = GetRegisterRequestParams(RandomString.Generate(11), credentials.AndroidId.ToString());
-			var content = new FormUrlEncodedContent(requestParams);
 
-			var response = await "https://android.clients.google.com/c2dm/register3"
-								 .WithHeader("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}")
-								 .WithHeader("User-Agent", GcmUserAgent)
-								 .PostAsync(content)
-								 .ConfigureAwait(false);
+			var content = new FormUrlEncodedContent(requestParams);
+			content.Headers.TryAddWithoutValidation("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}");
+
+			var response = await _httpClient.PostAsync("https://android.clients.google.com/c2dm/register3", content).ConfigureAwait(false);
 
 			response.EnsureSuccessStatusCode();
 
-			return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var registerResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+			return registerResponse;
 		}
 
 		private Dictionary<string, string> GetRegisterRequestParams(string appId, string device)
@@ -93,6 +90,17 @@ namespace VkNet.AudioBypassService.Utils
 				{ "app", "com.vkontakte.android" },
 				{ "device", device },
 			};
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			_httpClient?.Dispose();
 		}
 	}
 }
