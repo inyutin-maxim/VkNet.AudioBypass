@@ -5,11 +5,12 @@ using Microsoft.Extensions.Logging;
 using VkNet.Abstractions.Authorization;
 using VkNet.AudioBypassService.Abstractions;
 using VkNet.AudioBypassService.Exceptions;
+using VkNet.AudioBypassService.Utils;
 using VkNet.Exception;
 using VkNet.Model;
 using VkNet.Utils;
 
-namespace VkNet.AudioBypassService.Utils
+namespace VkNet.AudioBypassService
 {
 	/// <inheritdoc />
 	[UsedImplicitly]
