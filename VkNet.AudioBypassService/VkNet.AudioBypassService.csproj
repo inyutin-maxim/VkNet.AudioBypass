@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net40;net45;net461</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net45;net461</TargetFrameworks>
 		<Version>1.6.0</Version>
 		<Description>
 			Расширение для VkNet для обхода ограничения к методам Audio и Messages ВКонтакте API.
@@ -15,7 +15,7 @@
 	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="all" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.6.1.17183" PrivateAssets="all" />
-		<PackageReference Include="VkNet" Version="1.52.0" />
+		<PackageReference Include="VkNet" Version="1.55.0" />
 		<PackageReference Include="protobuf-net" Version="2.4.6" />
 	</ItemGroup>
 </Project>
