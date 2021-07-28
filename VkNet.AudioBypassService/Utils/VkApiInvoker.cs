@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -75,7 +76,7 @@ namespace VkNet.AudioBypassService.Utils
 
 		internal async Task<string> InvokeAsyncInternal(Uri uri, IDictionary<string, string> parameters, CancellationToken cancellationToken = default)
 		{
-			var response = await _restClient.PostAsync(uri, parameters).ConfigureAwait(false);
+			var response = await _restClient.PostAsync(uri, parameters, Encoding.UTF8).ConfigureAwait(false);
 
 			var answer = response.Value ?? response.Message;
 
