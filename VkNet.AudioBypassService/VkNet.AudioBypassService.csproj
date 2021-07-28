@@ -16,6 +16,6 @@
 		<PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="all" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506" PrivateAssets="all" />
 		<PackageReference Include="VkNet" Version="1.65.0" />
-		<PackageReference Include="protobuf-net" Version="2.4.6" />
+		<PackageReference Include="protobuf-net" Version="3.0.101" />
 	</ItemGroup>
 </Project>
