@@ -1,0 +1,22 @@
+name: CI Publish
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1.8.1
+        with:
+          dotnet-version: '5.х'
+        env:
+          NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+      - name: Create the package
+        run: dotnet pack -c Release -o artifacts
+      - name: Publish the package to Nuget
+        run: dotnet nuget push artifacts/*.nupkg
