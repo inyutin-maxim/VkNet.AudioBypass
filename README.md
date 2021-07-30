@@ -3,6 +3,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/VkNet.AudioBypassService.svg)](https://www.nuget.org/packages/VkNet.AudioBypassService/)
 [![NuGet](https://img.shields.io/nuget/dt/VkNet.AudioBypassService.svg)](https://www.nuget.org/packages/VkNet.AudioBypassService/)
+[![Build](https://github.com/shelln1ght/VkNet.AudioBypass/actions/workflows/publish.yml/badge.svg?branch=master)](https://github.com/shelln1ght/VkNet.AudioBypass/actions/workflows/publish.yml)
 
 ## Как использовать?
 
