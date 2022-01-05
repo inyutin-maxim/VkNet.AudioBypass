@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\VkNet.AudioBypassService\VkNet.AudioBypassService.csproj">
       <Project>{6a5ac71c-ba75-4f08-86d6-798fdaaf0d59}</Project>
