@@ -13,7 +13,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" PrivateAssets="all" />
+		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="all" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.33.0.40503" PrivateAssets="all" />
 		<PackageReference Include="VkNet" Version="1.68.0" />
 		<PackageReference Include="protobuf-net" Version="3.0.101" />
