@@ -13,7 +13,7 @@ namespace VkNet.AudioBypassService.Utils
 	{
 		private static readonly IDictionary<string, string> VkHeaders = new Dictionary<string, string>
 		{
-			{ "User-Agent", "VKAndroidApp/5.47.1-4248 (Android 9; SDK 28; armeabi-v7a; Android; ru; 1920x1080)" },
+			{ "User-Agent", "VKAndroidApp/6.54-9332 (Android 11; SDK 30; armeabi-v7a; Android; en; 2400x1080)" },
 			{ "x-vk-android-client", "new" }
 		};
 

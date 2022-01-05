@@ -65,7 +65,7 @@ namespace VkNet.AudioBypassService.Utils
 
 		public async Task<string> Register(AndroidCheckinResponse credentials)
 		{
-			var requestParams = GetRegisterRequestParams(RandomString.Generate(11), credentials.AndroidId.ToString());
+			var requestParams = GetRegisterRequestParams(RandomString.Generate(22), credentials.AndroidId.ToString());
 
 			var content = new FormUrlEncodedContent(requestParams);
 
@@ -74,7 +74,7 @@ namespace VkNet.AudioBypassService.Utils
 				Content = content
 			};
 			httpRequestMessage.Headers.TryAddWithoutValidation("Authorization", $"AidLogin {credentials.AndroidId}:{credentials.SecurityToken}");
-			
+
 			var response = await _httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
 
 			response.EnsureSuccessStatusCode();
