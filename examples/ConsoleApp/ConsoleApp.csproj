@@ -7,10 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VkNet.AudioBypassService\VkNet.AudioBypassService.csproj">
-      <Project>{6a5ac71c-ba75-4f08-86d6-798fdaaf0d59}</Project>
-      <Name>VkNet.AudioBypassService</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\VkNet.AudioBypassService\VkNet.AudioBypassService.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VkNet.AudioBypassService", "VkNet.AudioBypassService\VkNet.AudioBypassService.csproj", "{36E93EA0-3E0D-4E63-AFB1-2789F599D933}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{2CC44DA1-CAAD-4489-9D62-1366FA8A75C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "examples\ConsoleApp\ConsoleApp.csproj", "{17C32EC3-5621-4222-BA32-69C71CE53A6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,10 @@ Global
 		{36E93EA0-3E0D-4E63-AFB1-2789F599D933}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36E93EA0-3E0D-4E63-AFB1-2789F599D933}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36E93EA0-3E0D-4E63-AFB1-2789F599D933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C32EC3-5621-4222-BA32-69C71CE53A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C32EC3-5621-4222-BA32-69C71CE53A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C32EC3-5621-4222-BA32-69C71CE53A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C32EC3-5621-4222-BA32-69C71CE53A6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -23,5 +31,6 @@ Global
 		SolutionGuid = {D7D75C14-F9C2-4C98-8FE9-DBDB56E32D53}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{17C32EC3-5621-4222-BA32-69C71CE53A6F} = {2CC44DA1-CAAD-4489-9D62-1366FA8A75C2}
 	EndGlobalSection
 EndGlobal
