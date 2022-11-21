@@ -16,8 +16,8 @@ jobs:
         with:
           dotnet-version: 6.x
 
+      - name: Build & Pack
+        run: dotnet pack -c Release -o ./artifacts VkNet.AudioBypassService/VkNet.AudioBypassService.csproj
+
       - name: Publish
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: VkNet.AudioBypassService/VkNet.AudioBypassService.csproj
-          NUGET_KEY: ${{secrets.NUGET_TOKEN}}
+        run: dotnet nuget push ./artifacts/*.nupkg -k ${{ secrets.NUGET_TOKEN }}
