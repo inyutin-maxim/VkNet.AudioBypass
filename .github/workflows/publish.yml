@@ -20,4 +20,4 @@ jobs:
         run: dotnet pack -c Release -o ./artifacts VkNet.AudioBypassService/VkNet.AudioBypassService.csproj
 
       - name: Publish
-        run: dotnet nuget push ./artifacts/*.nupkg -k ${{ secrets.NUGET_TOKEN }}
+        run: dotnet nuget push ./artifacts/*.nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
