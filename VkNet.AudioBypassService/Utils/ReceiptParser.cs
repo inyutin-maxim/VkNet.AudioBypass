@@ -31,6 +31,7 @@ namespace VkNet.AudioBypassService.Utils
 			{
 				throw new InvalidOperationException($"Bad Response: {registerResponse}");
 			}
+			value = value.Split(':')[1];
 
 			return value;
 		}
