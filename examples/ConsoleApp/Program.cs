@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using VkNet;
 using VkNet.Abstractions;
 using VkNet.AudioBypassService.Extensions;
 using VkNet.Model;
-using VkNet.Model.RequestParams;
 
 namespace ConsoleApp
 {

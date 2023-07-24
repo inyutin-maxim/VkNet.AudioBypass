@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ namespace VkNet.AudioBypassService
 			_logger = logger;
 		}
 
-		public async Task<AuthorizationResult> AuthorizeAsync()
+		public async Task<AuthorizationResult> AuthorizeAsync(CancellationToken token = default)
 		{
 			_logger?.LogDebug("1. Авторизация");
 			var authResult = await BaseAuthAsync().ConfigureAwait(false);

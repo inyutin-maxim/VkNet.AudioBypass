@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using VkNet.Abstractions;
-using VkNet.Model.Attachments;
+using VkNet.Model;
 
 namespace VkNet.AudioBypassService.Extensions
 {
