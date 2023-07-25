@@ -11,10 +11,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup .NET 6.x
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET 7.x
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.x
+          dotnet-version: 7.x
 
       - name: Build & Pack
         run: dotnet pack -c Release -o ./artifacts VkNet.AudioBypassService/VkNet.AudioBypassService.csproj
