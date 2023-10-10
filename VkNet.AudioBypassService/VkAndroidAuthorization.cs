@@ -25,7 +25,7 @@ namespace VkNet.AudioBypassService
 		private readonly IVkApiInvoker _vkApiInvoker;
 
 		[CanBeNull]
-		private readonly ILogger<VkAndroidAuthorization> _logger;
+		private readonly ILogger _logger;
 
 		#endregion
 
@@ -34,7 +34,7 @@ namespace VkNet.AudioBypassService
 
 		public VkAndroidAuthorization([NotNull] IVkApiInvoker vkApiInvoker,
 									  [NotNull] IReceiptParser parser,
-									  [CanBeNull] ILogger<VkAndroidAuthorization> logger)
+									  [CanBeNull] ILogger logger)
 		{
 			_vkApiInvoker = vkApiInvoker;
 			ReceiptParser = parser;
