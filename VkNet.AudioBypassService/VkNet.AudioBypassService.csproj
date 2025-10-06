@@ -1,22 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
-		<Version>1.7.6</Version>
+		<Version>1.7.7</Version>
 		<Description>
 			Расширение для VkNet для обхода ограничения к методам Audio и Messages ВКонтакте API.
 		</Description>
 		<Authors>shelln1ght;itsokto</Authors>
 		<RepositoryType>GIT</RepositoryType>
-		<RepositoryUrl>https://github.com/shelln1ght/VkNet.AudioBypass</RepositoryUrl>
+		<RepositoryUrl>https://github.com/inyutin-maxim/VkNet.AudioBypass</RepositoryUrl>
 		<PackageId>VkNet.AudioBypassService</PackageId>
 		<PackageTags>vknet;vk;api;audio;bypass</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
         <LangVersion>latest</LangVersion>
+
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Logging.AutoLoggerMessage</InterceptorsNamespaces>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="JetBrains.Annotations" Version="2023.2.0" PrivateAssets="all" />
+		<PackageReference Include="JetBrains.Annotations" Version="2025.2.2" PrivateAssets="all" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.11.0.78383" PrivateAssets="all" />
         <PackageReference Include="protobuf-net" Version="3.2.26" />
-        <PackageReference Include="VkNet" Version="1.76.0" />
+        <PackageReference Include="VkNet" Version="1.79.0-alpha-137" />
 	</ItemGroup>
 </Project>
