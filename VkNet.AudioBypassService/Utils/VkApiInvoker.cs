@@ -60,7 +60,7 @@ namespace VkNet.AudioBypassService.Utils
 
 		public async Task<T> CallAsync<T>(string methodName, VkParameters parameters, CancellationToken cancellationToken = default)
 		{
-			var url = $"https://api.vk.com/method/{methodName}";
+			var url = $"https://api.vk.ru/method/{methodName}";
 
 			var jObject = await CallAsync(new Uri(url), parameters, cancellationToken).ConfigureAwait(false);
 

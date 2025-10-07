@@ -88,7 +88,7 @@ namespace VkNet.AudioBypassService
 					{ "device_id", RandomString.Generate(16) }
 				};
 
-				return await _vkApiInvoker.CallAsync<AuthorizationResult>(new Uri("https://oauth.vk.com/token"), parameters).ConfigureAwait(false);
+				return await _vkApiInvoker.CallAsync<AuthorizationResult>(new Uri("https://oauth.vk.ru/token"), parameters).ConfigureAwait(false);
 			}
 			catch (VkAuthException exception)
 			{
